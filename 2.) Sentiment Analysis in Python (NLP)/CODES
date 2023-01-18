@@ -1,0 +1,1314 @@
+Elements of a sentiment analysis problem
+What are the three typical elements of a sentiment analysis system?
+
+Opinion, subject, and opinion holder.
+
+
+How many positive and negative reviews are there?
+As a first step in a sentiment analysis task, similar to other data science problems, we might want to explore the dataset in more detail.
+
+You will work with a sample of the IMDB movies reviews. A dataset called movies has been created for you. It is a sample of the data we saw in the slides. Feel free to explore it in the IPython Shell, calling the .head() method, for example.
+
+Be aware that this exercise uses real data, and as such there is always a risk that it may contain profanity or other offensive content (in this exercise, and any following exercises that also use real data).
+
+Instructions
+100 XP
+Find the number of positive and negative reviews in the movies dataset.
+Find the proportion (percentage) of positive and negative reviews in the dataset.
+
+# Find the number of positive and negative reviews
+print('Number of positive and negative reviews: ', movies.label.value_counts())
+
+# Find the proportion of positive and negative reviews
+print('Proportion of positive and negative reviews: ', movies.label.value_counts() / len(movies))
+
+
+Longest and shortest reviews
+In this exercise, you will continue to work with the movies dataset. You explored how many positive and negative reviews there are. Now your task is to explore the review column in more detail.
+
+Instructions 1/2
+50 XP
+1
+Use the review column of the movies dataset to find the length of the longest review.
+
+
+length_reviews = movies.review.str.len()
+
+# How long is the longest review
+print(max(length_reviews))
+
+Similarly, find the length of the shortest review.
+
+length_reviews = movies.review.str.len()
+
+# How long is the shortest review
+print(min(length_reviews))
+
+
+
+Detecting the sentiment of Tale of Two Cities
+In the video we saw that one type of algorithms for detecting the sentiment are based on a lexicon of predefined words and their corresponding polarity score. Your task in this exercise is to detect the sentiment, including polarity and subjectivity of a given string using such a rule-based approach and the textblob library in Python.
+
+You will work with the two_cities string. It contains the first sentence of Dickens's A Tale of Two Cities novel. Feel free to explore it in the Shell.
+
+Instructions
+100 XP
+Create a text blob object from the two_cities string.
+Print out the polarity and subjectivity.
+
+
+# Import the required packages
+from textblob import TextBlob
+
+# Create a textblob object  
+blob_two_cities = TextBlob(two_cities)
+
+# Print out the sentiment 
+print(blob_two_cities.sentiment)
+
+
+Comparing the sentiment of two strings
+In this exercise, you will compare the sentiment of two different strings. A string called annak has been defined for you and it contains the first sentence of Anna Karenina. A second string called catcher has been created and it contains the first sentence of The Catcher in the Rye. Feel free to explore both in the IPython Shell.
+
+Your task is again to detect the sentiment of each string - both their polarity and subjectivity. Which one has higher sentiment score? Did you expect that to be the case?
+
+Instructions
+100 XP
+Import the required function from the appropriate package.
+Create a text blob object from the annak string.
+Create a text blob from the catcher string as well.
+Print out the polarity and subjectivity of each of the created blobs.
+
+
+# Import the required packages
+from textblob import TextBlob
+
+# Create a textblob object 
+blob_annak = TextBlob(annak)
+blob_catcher = TextBlob(catcher)
+
+# Print out the sentiment   
+print('Sentiment of annak: ', blob_annak.sentiment)
+print('Sentiment of catcher: ', blob_catcher.sentiment)
+
+
+What is the sentiment of a movie review?
+In a previous exercise, you detected the sentiment of the first sentence of the Tale of Two Cities novel by Dickens. Now you will continue to work with the movie reviews dataset. Do you remember how you found the longest and shortest reviews? One of the longest reviews has been imported for you. It is called titanic as it discusses the Titanic movie. Feel free to explore it in the Shell.
+
+Can you calculate the polarity and subjectivity of the titanic string? This review is positive (i.e. has a label of 1). Is the polarity score also positive?
+
+Instructions
+100 XP
+Import the required functionality.
+Create a text blob object from the titanic string.
+Print out the result of its sentiment property.
+
+# Import the required packages
+from textblob import TextBlob
+
+# Create a textblob object  
+blob_titanic = TextBlob(titanic)
+
+# Print out its sentiment  
+print(blob_titanic.sentiment)
+
+
+Your first word cloud
+We saw in the video that word clouds are very intuitive and a great and fast way to get a first impression on what a piece of text is talking about.
+
+In this exercise, you will build your first word cloud. A string east_of_eden has been defined for you. It contains one of the first sentences of John Steinbeck's novel East of Eden. You can inspect its contents in the IPython Shell.
+
+The matplotlib.pyplot package has been imported for you as plt.
+
+Instructions 1/2
+50 XP
+1
+2
+Import the required package to build a word cloud.
+Generate a word cloud using the east_of_eden string. The background color has been specified as white.
+
+from wordcloud import WordCloud as wc
+
+# Generate the word cloud from the east_of_eden string
+cloud_east_of_eden = wc(background_color="white").generate(east_of_eden)
+
+
+Create a figure from the word cloud object you generated in the previous step.
+Display the image.
+
+# Generate the word cloud from the east_of_eden string
+cloud_east_of_eden = WordCloud(background_color="white").generate(east_of_eden)
+
+# Create a figure of the generated cloud
+plt.imshow(cloud_east_of_eden, interpolation='bilinear')  
+plt.axis('off')
+# Display the figure
+plt.show()
+
+Which words are in the word cloud?
+Let's continue with the word cloud exercises. A string called illuminated has been defined for you. It contains an emotionally charged quote from the book 'Everything is Illuminated' by Jonathan Safran Foer. Generate and display a word cloud using the illuminated string. Note that all required packages have been imported for you.
+
+Which of the following answers contains only words you see in the word cloud?
+
+Day, worse, others.
+
+
+Word Cloud on movie reviews
+You have been working with the movie reviews dataset. You have explored the distribution of the reviews and have seen how long the longest and the shortest reviews are. But what do positive and negative reviews talk about?
+
+In this exercise, you will practice building a word cloud of the top 100 positive reviews.
+
+What are the words that pop up? Do they make sense to you?
+
+The string descriptions has been created for you by concatenating the descriptions of the top 100 positive reviews. A movie-specific set of stopwords (very frequent words, such as the, a/an, and, which will not be very informative and we'd like to exclude from the graph) is available as my_stopwords. Recall that the interpolation argument makes the word cloud appear more smoothly.
+
+Instructions
+100 XP
+Import the wordcloud function from the respective package.
+Apply the word cloud function to the descriptions string. Set the background color as 'white', and change the stopwords argument.
+Create a wordcloud image.
+Finally, do not forget to display the image.
+
+# Import the word cloud function  
+from wordcloud import WordCloud
+
+# Create and generate a word cloud image 
+my_cloud = WordCloud(background_color='white', stopwords=my_stopwords).generate(descriptions)
+
+# Display the generated wordcloud image
+plt.imshow(my_cloud, interpolation='bilinear') 
+plt.axis("off")
+
+# Don't forget to show the final image
+plt.show()
+
+Which statement about BOW is true?
+You were introduced to a bag-of-words(BOW) and some of its characteristics in the video. Which of the following statements about BOW is true?
+
+Bag-of-words is a simple but effective method to build a vocabulary of all the words occurring in a document.
+
+
+
+Your first BOW
+A bag-of-words is an approach to transform text to numeric form.
+
+In this exercise, you will apply a BOW to the annak list before moving on to a larger dataset in the next exercise.
+
+Your task will be to work with this list and apply a BOW using the CountVectorizer(). This transformation is your first step in being able to understand the sentiment of a text. Pay attention to words which might carry a strong sentiment.
+
+Remember that the output of a CountVectorizer() is a sparse matrix, which stores only entries which are non-zero. To look at the actual content of this matrix, we convert it to a dense array using the .toarray() method.
+
+Note that in this case you don't need to specify the max_features argument because the text is short.
+
+Instructions
+100 XP
+Import the count vectorizer function from sklearn.feature_extraction.text.
+Build and fit the vectorizer on the small dataset.
+Create the BOW representation with name anna_bow by calling the transform() method.
+Print the BOW result as a dense array.
+
+
+# Import the required function
+from sklearn.feature_extraction.text import CountVectorizer
+
+annak = ['Happy families are all alike;', 'every unhappy family is unhappy in its own way']
+
+# Build the vectorizer and fit it
+anna_vect = CountVectorizer()
+anna_vect.fit(annak)
+
+# Create the bow representation
+anna_bow = anna_vect.transform(annak)
+
+# Print the bag-of-words result 
+print(anna_bow.toarray())
+
+BOW using product reviews
+You practiced a BOW on a small dataset. Now you will apply it to a sample of Amazon product reviews. The data has been imported for you and is called reviews. It contains two columns. The first one is called score and it is 0 when the review is negative, and 1 when it is positive. The second column is called review and it contains the text of the review that a customer wrote. Feel free to explore the data in the IPython Shell.
+
+Your task is to build a BOW vocabulary, using the review column.
+
+Remember that we can call the .get_feature_names() method on the vectorizer to obtain a list of all the vocabulary elements.
+
+Instructions
+100 XP
+Create a CountVectorizer object, specifying the maximum number of features.
+Fit the vectorizer.
+Transform the fitted vectorizer.
+Create a DataFrame where you transform the sparse matrix to a dense array and make sure to correctly specify the names of columns.
+
+from sklearn.feature_extraction.text import CountVectorizer 
+
+# Build the vectorizer, specify max features 
+vect = CountVectorizer(max_features=100)
+# Fit the vectorizer
+vect.fit(reviews.review)
+
+# Transform the review column
+X_review = vect.transform(reviews.review)
+
+# Create the bow representation
+X_df=pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+Specify token sequence length with BOW
+We saw in the video that by specifying different length of tokens - what we called n-grams - we can better capture the context, which can be very important.
+
+In this exercise, you will work with a sample of the Amazon product reviews. Your task is to build a BOW vocabulary, using the review column and specify the sequence length of tokens.
+
+Instructions
+100 XP
+Build the vectorizer, specifying the token sequence length to be uni- and bigrams.
+Fit the vectorizer.
+Transform the fitted vectorizer.
+In the DataFrame, make sure to correctly specify the column names.
+
+
+from sklearn.feature_extraction.text import CountVectorizer 
+
+# Build the vectorizer, specify token sequence and fit
+vect = CountVectorizer(ngram_range=(1,2))
+vect.fit(reviews.review)
+
+# Transform the review column
+X_review = vect.transform(reviews.review)
+
+# Create the bow representation
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+Size of vocabulary of movies reviews
+In this exercise, you will practice different ways to limit the size of the vocabulary using a sample of the movies reviews dataset. The first column is the review, which is of type object and the second column is the label, which is 0 for a negative review and 1 for a positive one.
+
+The three methods that you will use will transform the text column to new numeric columns, capturing the count of a word or a phrase in each review. Each method will ultimately result in building a different number of new features.
+
+Instructions 1/3
+35 XP
+1
+Using the movies dataset, limit the size of the vocabulary to 100.
+
+
+from sklearn.feature_extraction.text import CountVectorizer 
+
+# Build the vectorizer, specify size of vocabulary and fit
+vect = CountVectorizer(max_features=100)
+vect.fit(movies.review)
+
+# Transform the review column
+X_review = vect.transform(movies.review)
+# Create the bow representation
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+
+
+Using the movies dataset, limit the size of the vocabulary to include terms which occur in no more than 200 documents.
+
+
+from sklearn.feature_extraction.text import CountVectorizer 
+
+# Build and fit the vectorizer
+vect = CountVectorizer(max_df=200)
+vect.fit(movies.review)
+
+# Transform the review column
+X_review = vect.transform(movies.review)
+# Create the bow representation
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+Using the movies dataset, limit the size of the vocabulary to ignore terms which occur in less than 50 documents.
+
+
+
+
+from sklearn.feature_extraction.text import CountVectorizer 
+
+# Build and fit the vectorizer
+vect = CountVectorizer(min_df=50)
+vect.fit(movies.review)
+
+# Transform the review column
+X_review = vect.transform(movies.review)
+# Create the bow representation
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+BOW with n-grams and vocabulary size
+In this exercise, you will practice building a bag-of-words once more, using the reviews dataset of Amazon product reviews. Your main task will be to limit the size of the vocabulary and specify the length of the token sequence.
+
+Instructions
+100 XP
+Import the vectorizer from sklearn.
+Build the vectorizer and make sure to specify the following parameters: the size of the vocabulary should be limited to 1000, include only bigrams, and ignore terms that appear in more than 500 documents.
+Fit the vectorizer to the review column.
+Create a DataFrame from the BOW representation.
+
+
+#Import the vectorizer
+from sklearn.feature_extraction.text  import CountVectorizer
+
+# Build the vectorizer, specify max features and fit
+vect = CountVectorizer(max_features=1000, ngram_range=(2, 2), max_df=500)
+vect.fit(reviews.review)
+
+# Transform the review
+X_review = vect.transform(reviews.review)
+
+# Create a DataFrame from the bow representation
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+
+Tokenize a string from GoT
+A first standard step when working with text is to tokenize it, in other words, split a bigger string into individual strings, which are usually single words (tokens).
+
+A string GoT has been created for you and it contains a quote from George R.R. Martin's Game of Thrones. Your task is to split it into individual tokens.
+
+Instructions
+100 XP
+Import the word tokenizing function from nltk.
+Transform the GoT string to word tokens.
+
+
+# Import the required function
+from nltk import word_tokenize
+
+# Transform the GoT string to word tokens
+print(word_tokenize(GoT))
+
+
+Word tokens from the Avengers
+Now that you have tokenized your first string, it is time to iterate over items of a list and tokenize them as well. An easy way to do that with one line of code is with a list comprehension.
+
+A list avengers has been created for you. It contains a few quotes from the Avengers movies. You can explore it in the IPython Shell.
+
+Instructions
+100 XP
+Import the required function and package.
+Apply the word tokenizing function on each item of our list.
+
+
+# Import the word tokenizing function
+from nltk import word_tokenize
+
+# Tokenize each item in the avengers 
+tokens_avengers = [word_tokenize(item) for item in avengers]
+
+print(tokens_avengers)
+
+A feature for the length of a review
+You have now worked with a string and a list with string items, it is time to use a larger sample of data.
+
+Your task in this exercise is to create a new feature for the length of a review, using the familiar reviews dataset.
+
+Instructions 1/2
+50 XP
+1
+2
+Import the word tokenizing function from the required package.
+Apply the function to the review column of the reviews dataset.
+
+# Import the needed packages
+from nltk import word_tokenize
+
+# Tokenize each item in the review column 
+word_tokens = [word_tokenize(review) for review in reviews.review]
+
+# Print out the first item of the word_tokens list
+print(word_tokens[0])
+
+
+# Create an empty list to store the length of reviews
+len_tokens = []
+
+# Iterate over the word_tokens list and determine the length of each item
+for i in range(len(word_tokens)):
+     len_tokens.append(len(word_tokens[i]))
+
+# Create a new feature for the lengh of each review
+reviews['n_words'] = len_tokens 
+
+
+Identify the language of a string
+Sometimes you might need to analyze the sentiment of non-English text. Your first task in such a case will be to identify the foreign language.
+
+In this exercise you will identify the language of a single string. A string called foreign has been created for you. It has been randomly extracted from the reviews dataset and may contain some grammatical errors. Feel free to explore it in the IPython Shell.
+
+Instructions
+100 XP
+Import the required function from the language detection package.
+Detect the language of the foreign string.
+
+# Import the language detection function and package
+from langdetect import detect_langs
+
+# Detect the language of the foreign string
+print(detect_langs(foreign))
+
+
+Detect language of a list of strings
+Now you will detect the language of each item in a list. A list called sentences has been created for you and it contains 3 sentences, each in a different language. They have been randomly extracted from the product reviews dataset.
+
+Instructions
+100 XP
+Iterate over the sentences in the list.
+Detect the language of each sentence and append the detected language to the empty list languages.
+
+from langdetect import detect_langs
+
+languages = []
+
+# Loop over the sentences in the list and detect their language
+for sentence in sentences:
+    languages.append(detect_langs(sentence))
+    
+print('The detected languages are: ', languages)
+
+
+Language detection of product reviews
+You will practice language detection on a small dataset called non_english_reviews. It is a sample of non-English reviews from the Amazon product reviews.
+
+You will iterate over the rows of the dataset, detecting the language of each row and appending it to an empty list. The list needs to be cleaned so that it only contains the language of the review such as 'en' for English instead of the regular output en:0.9987654. Remember that the language detection function might detect more than one language and the first item in the returned list is the most likely candidate. Finally, you will assign the list to a new column.
+
+The logic is the same as used in the slides and the exercise before but instead of applying the function to a list, you work with a dataset.
+
+Instructions
+100 XP
+Iterate over the rows of the non_english_reviews dataset.
+Inside the loop, detect the language of the second column of the dataset.
+Clean the string by splitting on a : inside the list comprehension expression.
+Finally, assign the cleaned list to a new column.
+
+
+from langdetect import detect_langs
+languages = [] 
+
+# Loop over the rows of the dataset and append  
+for row in range(len(non_english_reviews)):
+    languages.append(detect_langs(non_english_reviews.iloc[row, 1]))
+
+# Clean the list by splitting     
+languages = [str(lang).split(':')[0][1:] for lang in languages]
+
+# Assign the list to a new feature 
+non_english_reviews['language'] = languages
+
+print(non_english_reviews.head())
+
+
+
+Word cloud of tweets
+Your task in this exercise is to plot a word cloud using a sample of Twitter data, expressing customers' sentiments about airlines. A string text_tweet has been created for you and it contains the messages of a 1000 customers shared on Twitter.
+
+In the first step, your are asked to build the word cloud without removing the stop words, and in the second step to build the same cloud after you have removed the stop words.
+
+Feel free to familiarize yourself with the text_tweet list.
+
+Instructions 2/2
+50 XP
+Import the word cloud function and package.
+Create and generate the word cloud, using the text_tweet vector.
+
+
+# Import the word cloud function 
+from wordcloud import WordCloud 
+
+# Create and generate a word cloud image
+my_cloud = WordCloud(background_color='white').generate(text_tweet)
+
+# Display the generated wordcloud image
+plt.imshow(my_cloud, interpolation='bilinear') 
+plt.axis("off")
+
+# Don't forget to show the final image
+plt.show()
+
+
+
+Define the default list of stop words and update it.
+Specify the stop words argument in the WordCloud function.
+
+
+# Import the word cloud function and stop words list
+from wordcloud import WordCloud, STOPWORDS 
+
+# Define and update the list of stopwords
+my_stop_words = STOPWORDS.update(['airline', 'airplane'])
+
+# Create and generate a word cloud image
+my_cloud = WordCloud(stopwords=my_stop_words).generate(text_tweet)
+
+# Display the generated wordcloud image
+plt.imshow(my_cloud, interpolation='bilinear') 
+plt.axis("off")
+# Don't forget to show the final image
+plt.show()
+
+
+Airline sentiment with stop words
+You are given a dataset, called tweets, which contains customers' reviews and sentiments about airlines. It consists of two columns: airline_sentiment and text where the sentiment can be positive, negative or neutral, and the text is the text of the tweet.
+
+In this exercise, you will create a BOW representation but will account for the stop words. Remember that stop words are not informative and you might want to remove them. That will result in a smaller vocabulary and eventually, fewer features. Keep in mind that we can enrich a default list of stop words with ones that are specific to our context.
+
+Instructions
+100 XP
+Import the default list of English stop words.
+Update the default list of stop words with the given list ['airline', 'airlines', '@'] to create my_stop_words.
+Specify the stop words argument in the vectorizer.
+
+# Import the stop words
+from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
+
+# Define the stop words
+my_stop_words = ENGLISH_STOP_WORDS.union(['airline', 'airlines', '@'])
+
+# Build and fit the vectorizer
+vect = CountVectorizer(stop_words=my_stop_words)
+vect.fit(tweets.text)
+
+# Create the bow representation
+X_review = vect.transform(tweets.text)
+# Create the data frame
+X_df = pd.DataFrame(X_review.toarray(), columns=vect.get_feature_names())
+print(X_df.head())
+
+
+Multiple text columns
+In this exercise, you will continue working with the airline Twitter data. A dataset tweets has been imported for you.
+
+In some situations, you might have more than one text column in a dataset and you might want to create a numeric representation for each of the text columns. Here, besides the text column, which contains the body of the tweet, there is a second text column, called negativereason. It contains the reason the customer left a negative review.
+
+Your task is to build BOW representations for both columns and specify the required stop words.
+
+Instructions
+100 XP
+Import the vectorizer package and the default list of English stop words.
+Update the default list of English stop words and create the my_stop_words set.
+Specify the stop words argument in the first vectorizer to the updated set, and in the second vectorizer - the default set of English stop words.
+
+# Import the vectorizer and default English stop words list
+from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
+
+# Define the stop words
+my_stop_words = ENGLISH_STOP_WORDS.union(['airline', 'airlines', '@', 'am', 'pm'])
+ 
+# Build and fit the vectorizers
+vect1 = CountVectorizer(stop_words=my_stop_words)
+vect2 = CountVectorizer(stop_words=ENGLISH_STOP_WORDS) 
+vect1.fit(tweets.text)
+vect2.fit(tweets.negative_reason)
+
+# Print the last 15 features from the first, and all from second vectorizer
+print(vect1.get_feature_names()[-15:])
+print(vect2.get_feature_names())
+
+
+Specify the token pattern
+In this exercise, you will work with the text column of the tweets dataset. Your task is to vectorize the object column using CountVectorizer. You will apply different patterns of tokens in the vectorizer. Remember that by specifying the token pattern, you can filter out characters.
+
+The CountVectorizer has been imported for you.
+
+Instructions 1/2
+50 XP
+1
+2
+Build a vectorizer from the text column, specifying the pattern of tokens to be equal to r'\b[^\d\W][^\d\W]'.
+
+# Build and fit the vectorizer
+vect = CountVectorizer(token_pattern=r'\b[^\d\W][^\d\W]+\b').fit(tweets.text)
+vect.transform(tweets.text)
+print('Length of vectorizer: ', len(vect.get_feature_names()))
+
+
+
+Build a vectorizer from the text column using the default values of the function's arguments.
+Build a second vectorizer, specifying the pattern of tokens to be equal to r'\b[^\d\W][^\d\W]'.
+
+
+# Build the first vectorizer
+vect1 = CountVectorizer().fit(tweets.text)
+vect1.transform(tweets.text)
+
+# Build the second vectorizer
+vect2 = CountVectorizer(token_pattern=r'\b[^\d\W][^\d\W]').fit(tweets.text)
+vect2.transform(tweets.text)
+
+# Print out the length of each vectorizer
+print('Length of vectorizer 1: ', len(vect1.get_feature_names()))
+print('Length of vectorizer 2: ', len(vect2.get_feature_names()))
+
+
+String operators with the Twitter data
+You continue working with the tweets data where the text column stores the content of each tweet.
+
+Your task is to turn the text column into a list of tokens. Then, using string operators, remove all non-alphabetic characters from the created list of tokens.
+
+Instructions
+100 XP
+Import the word tokenizing function.
+Create word tokens from each tweet.
+Filter out all non-alphabetic characters from the created list, i.e. retain only letters.
+
+# Import the word tokenizing package
+from nltk import word_tokenize
+
+# Tokenize the text column
+word_tokens = [word_tokenize(review) for review in tweets.text]
+print('Original tokens: ', word_tokens[0])
+
+# Filter out non-letter characters
+cleaned_tokens = [[word for word in item if word.isalpha()] for item in word_tokens]
+print('Cleaned tokens: ', cleaned_tokens[0])
+
+More string operators and Twitter
+In this exercise, you will apply different string operators to three strings, selected from the tweets dataset. A tweets_list has been created for you.
+
+You need to construct three new lists by applying different string operators:
+
+a list retaining only letters
+a list retaining only characters
+a list retaining only digits
+The required functions have been imported for you from nltk.
+
+Instructions
+100 XP
+Create a list of the tokens from tweets_list.
+In the list letters remove all digits and other characters, i.e. keep only letters.
+Retain alphanumeric characters but remove all other characters in let_digits.
+Create digits by removing letters and characters and keeping only numbers.
+
+# Create a list of lists, containing the tokens from list_tweets
+tokens = [word_tokenize(item) for item in tweets_list]
+
+# Remove characters and digits , i.e. retain only letters
+letters = [[word for word in item if word.isalpha()] for item in tokens]
+# Remove characters, i.e. retain only letters and digits
+let_digits = [[word for word in item if word.isalnum()] for item in tokens]
+# Remove letters and characters, retain only digits
+digits = [[word for word in item if word.isdigit()] for item in tokens]
+
+# Print the last item in each list
+print('Last item in alphabetic list: ', letters[2])
+print('Last item in list of alphanumerics: ', let_digits[2])
+print('Last item in the list of digits: ', digits[2])
+
+
+Stems and lemmas from GoT
+In this exercise, you are given a couple of sentences from George R.R. Martin's Game of Thrones. Your task is to create stems and lemmas from the given GoT string.
+
+Remember that stems reduce a word to its root whereas lemmas produce an actual word. However, speed can differ significantly between the methods with stemming being much faster. In Steps 2 and 3, pay attention to the total time it takes to perform each operation. We're making use of the time.time() method to measure the time it takes to perform stemming and lemmatization.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Import the stemming and lemmatization functions.
+Build a list of tokens from the GoT string.
+
+# Import the required packages from nltk
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import word_tokenize
+
+porter = PorterStemmer()
+WNlemmatizer = WordNetLemmatizer()
+
+# Tokenize the GoT string
+tokens = word_tokenize(GoT) 
+
+
+Using list comprehension and the porter stemmer you imported, create the stemmed_tokens list.
+
+import time
+
+# Log the start time
+start_time = time.time()
+
+# Build a stemmed list
+stemmed_tokens = [porter.stem(token) for token in tokens] 
+
+# Log the end time
+end_time = time.time()
+
+print('Time taken for stemming in seconds: ', end_time - start_time)
+print('Stemmed tokens: ', stemmed_tokens) 
+
+
+Using list comprehension and the WNlemmatizer you imported, create the lem_tokens list.
+
+import time
+
+# Log the start time
+start_time = time.time()
+
+# Build a lemmatized list
+lem_tokens = [WNlemmatizer.lemmatize(token) for token in tokens]
+
+# Log the end time
+end_time = time.time()
+
+print('Time taken for lemmatizing in seconds: ', end_time - start_time)
+print('Lemmatized tokens: ', lem_tokens) 
+
+
+
+Well done! You can use stemming or lemmatization to transform lists of tokens. 
+Which one to choose will depend on the problem. 
+Did you notice how much longer lemmatization takes compared to stemming?
+
+
+
+Stem Spanish reviews
+You will recall that in a previous chapter we used a language detection package to determine the language of different Amazon product reviews. In this exercise, you will first detect the languages in the non_english_reviews. The reviews are in multiple languages but you will select ONLY those in Spanish. Feel free to go back to the video discussing foreign language detection if you have forgotten some of the concepts.
+
+In the second step, you will create word tokens from the Spanish reviews and will stem them using a SnowBall stemmer for the Spanish language. The language detection package is not perfect, unfortunately. Therefore, it is possible that sometimes the detected language is not correct.
+
+Instructions 1/2
+50 XP
+1
+2
+Import the langdetect package.
+Iterate over the rows of the non_english_reviews using the len() method and range() function.
+Use detect_langs() to detect the language of each review in the for loop.
+
+# Import the language detection package
+import langdetect
+
+# Loop over the rows of the dataset and append  
+languages = [] 
+for i in range(len(non_english_reviews)):
+    languages.append(langdetect.detect_langs(non_english_reviews.iloc[i, 1]))
+
+# Clean the list by splitting     
+languages = [str(lang).split(':')[0][1:] for lang in languages]
+# Assign the list to a new feature 
+non_english_reviews['language'] = languages
+
+# Select the Spanish ones
+filtered_reviews = non_english_reviews[non_english_reviews.language == 'es']
+
+
+
+
+Import the SnowballStemmer from the respective package.
+Create word tokens from the review column of the filtered_reviews from the previous step.
+Use the Spanish stemmer you imported to stem the created list of tokens.
+
+
+
+# Import the required packages
+from nltk.stem.snowball import SnowballStemmer
+from nltk import word_tokenize
+
+# Import the Spanish SnowballStemmer
+SpanishStemmer = SnowballStemmer("spanish")
+
+# Create a list of tokens
+tokens = [word_tokenize(review) for review in filtered_reviews.review] 
+# Stem the list of tokens
+stemmed_tokens = [[SpanishStemmer.stem(word) for word in token] for token in tokens]
+
+# Print the first item of the stemmed tokenss
+print(stemmed_tokens[0])
+
+
+
+Stems from tweets
+In this exercise, you will work with an array called tweets. It contains the text of the airline sentiment data collected from Twitter.
+
+Your task is to work with this array and transform it into a list of tokens using list comprehension. After that, iterate over the list of tokens and create a stem out of each token. Remember that list comprehensions are a one-line alternative to for loops.
+
+Instructions
+100 XP
+Import the function we used to transform strings into stems.
+Call the Porter stemmer function you just imported.
+Using a list comprehension, create the list tokens. It should contain all the word tokens from the tweets array.
+Iterate over the tokens list and apply the stemming function to each item in the list.
+
+# Import the function to perform stemming
+from nltk.stem import PorterStemmer
+from nltk import word_tokenize
+
+# Call the stemmer
+porter = PorterStemmer()
+
+# Transform the array of tweets to tokens
+tokens = [word_tokenize(tweet) for tweet in tweets]
+# Stem the list of tokens
+stemmed_tokens = [[porter.stem(word) for word in tweet] for tweet in tokens] 
+# Print the first element of the list
+print(stemmed_tokens[0])
+
+
+Your first TfIdf
+In this exercise, you will apply the TfIdf method to the small annak dataset, containing the first sentence of Anna Karenina by Leo Tolstoy.
+
+Your task will be to work with this dataset and apply the TfidfVectorizer() function. Recall that performing a numeric transformation of text is your first step in being able to understand the sentiment of the text. The Tfidf vectorizer is another way to construct a vocabulary from our sentiment column.
+
+Instructions
+100 XP
+Import the function for building a TfIdf vectorizer from sklearn.feature_extraction.text.
+Call the TfidfVectorizer() function and fit it on the annak dataset .
+Transform the vectorizer.
+
+
+TfIdf on Twitter airline sentiment data
+You will now build features using the TfIdf method. You will continue to work with the tweets dataset.
+
+In this exercise, you will utilize what you have learned in previous lessons and remove stop words, use a token pattern and specify the n-grams.
+
+The final output will be a DataFrame, of which the columns are created using the TfidfVectorizer(). Such a DataFrame can directly be passed to a supervised learning model, which is what we will tackle in the next chapter.
+
+# Import the required function
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+annak = ['Happy families are all alike;', 'every unhappy family is unhappy in its own way']
+
+# Call the vectorizer and fit it
+anna_vect = TfidfVectorizer().fit(annak)
+
+# Create the tfidf representation
+anna_tfidf = anna_vect.transform(annak)
+
+# Print the result 
+print(anna_tfidf.toarray())
+
+Instructions
+100 XP
+Import the required package to build a TfidfVectorizer and the ENGLISH_STOP_WORDS.
+Build a TfIdf vectorizer from the text column of the tweets dataset, specifying uni- and bi-grams as a choice of n-grams, tokens which include only alphanumeric characters using the given token pattern, and the stop words corresponding to the ENGLISH_STOP_WORDS.
+Transform the vectorizer, specifying the same column that you fit.
+Specify the column names in the DataFrame() function.
+
+# Import the required vectorizer package and stop words list
+from sklearn.feature_extraction.text import TfidfVectorizer, ENGLISH_STOP_WORDS
+
+# Define the vectorizer and specify the arguments
+my_pattern = r'\b[^\d\W][^\d\W]+\b'
+vect = TfidfVectorizer(ngram_range=(1,2), max_features=100, token_pattern=my_pattern, stop_words=ENGLISH_STOP_WORDS).fit(tweets.text)
+
+# Transform the vectorizer
+X_txt = vect.transform(tweets.text)
+ 
+# Transform to a data frame and specify the column names
+X=pd.DataFrame(X_txt.toarray(), columns=vect.get_feature_names())
+print('Top 5 rows of the DataFrame: ', X.head())
+
+
+Tfidf and a BOW on same data
+In this exercise, you will transform the review column of the Amazon product reviews using both a bag-of-words and a tfidf transformation.
+
+Build both vectorizers, specifying only the maximum number of features to be equal to 100. Create DataFrames after the transformation and print the top 5 rows of each.
+
+Be careful how you specify the maximum number of features in the vocabulary. A large vocabulary size can result in your session being disconnected.
+
+Instructions
+100 XP
+Import the BOW and Tfidf vectorizers.
+Build and fit a BOW and a Tfidf vectorizer from the review column and limit the number of created features to 100.
+Create DataFrames from the transformed vector representations.
+
+
+# Import the required packages
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+# Build a BOW and tfidf vectorizers from the review column and with max of 100 features
+vect1 = CountVectorizer(max_features=100).fit(reviews.review)
+vect2 = TfidfVectorizer(max_features=100).fit(reviews.review) 
+
+# Transform the vectorizers
+X1 = vect1.transform(reviews.review)
+X2 = vect2.transform(reviews.review)
+# Create DataFrames from the vectorizers 
+X_df1 = pd.DataFrame(X1.toarray(), columns=vect1.get_feature_names())
+X_df2 = pd.DataFrame(X2.toarray(), columns=vect2.get_feature_names())
+print('Top 5 rows using BOW: \n', X_df1.head())
+print('Top 5 rows using tfidf: \n', X_df2.head())
+
+
+Logistic regression of movie reviews
+In the video we learned that logistic regression is a common way to model a classification task, such as classifying the sentiment as positive or negative.
+
+In this exercise, you will work with the movies reviews dataset. The label column stores the sentiment, which is 1 when the review is positive, and 0 when negative. The text review has been transformed, using BOW, to numeric columns.
+
+Your task is to build a logistic regression model using the movies dataset and calculate its accuracy.
+
+Instructions
+100 XP
+Import the logistic regression function.
+Create and fit a logistic regression on the labels y and the features X.
+Calculate the accuracy of the logistic regression model, using the default .score() method.
+
+# Import the logistic regression
+from sklearn.linear_model import LogisticRegression
+
+# Define the vector of targets and matrix of features
+y = movies.label
+X = movies.drop('label', axis=1)
+
+# Build a logistic regression model and calculate the accuracy
+log_reg = LogisticRegression().fit(X, y)
+print('Accuracy of logistic regression: ', log_reg.score(X, y))
+
+
+Logistic regression using Twitter data
+In this exercise, you will build a logistic regression model using the tweets dataset. The target is given by the airline_sentiment, which is 0 for negative tweets, 1 for neutral, and 2 for positive ones. So, in this case, you are given a multi-class classification task. Everything we learned about binary problems applies to multi-class classification problems as well.
+
+You will evaluate the accuracy of the model using the two different approaches from the slides.
+
+The logistic regression function and accuracy score have been imported for you.
+
+Instructions
+100 XP
+Build and fit a logistic regression model using the defined X and y as arguments.
+Calculate the accuracy of the logistic regression model.
+Predict the labels.
+Calculate the accuracy score using the predicted and true labels.
+
+# Define the vector of targets and matrix of features
+y = tweets.airline_sentiment
+X = tweets.drop('airline_sentiment', axis=1)
+
+# Build a logistic regression model and calculate the accuracy
+log_reg = LogisticRegression().fit(X, y)
+print('Accuracy of logistic regression: ', log_reg.score(X,y))
+
+# Create an array of prediction
+y_predict = log_reg.predict(X)
+
+# Print the accuracy using accuracy score
+print('Accuracy of logistic regression: ', acurracy_score(y, y_predict))
+
+
+Logistic regression using Twitter data
+In this exercise, you will build a logistic regression model using the tweets dataset. The target is given by the airline_sentiment, which is 0 for negative tweets, 1 for neutral, and 2 for positive ones. So, in this case, you are given a multi-class classification task. Everything we learned about binary problems applies to multi-class classification problems as well.
+
+You will evaluate the accuracy of the model using the two different approaches from the slides.
+
+The logistic regression function and accuracy score have been imported for you.
+
+Instructions
+100 XP
+Build and fit a logistic regression model using the defined X and y as arguments.
+Calculate the accuracy of the logistic regression model.
+Predict the labels.
+Calculate the accuracy score using the predicted and true labels
+
+
+# Define the vector of targets and matrix of features
+y = tweets.airline_sentiment
+X = tweets.drop('airline_sentiment', axis=1)
+
+# Build a logistic regression model and calculate the accuracy
+log_reg = LogisticRegression().fit(X, y)
+print('Accuracy of logistic regression: ', log_reg.score(X,y))
+
+# Create an array of prediction
+y_predict = log_reg.predict(X)
+
+# Print the accuracy using accuracy score
+print('Accuracy of logistic regression: ', accuracy_score(y, y_predict))
+
+
+
+Build and assess a model: movies reviews
+In this problem, you will build a logistic regression model using the movies dataset. The score is stored in the label column and is 1 when the review is positive, and 0 when negative. The text review has been transformed, using BOW, to numeric columns.
+
+You have already built a classifier but evaluated it using the same data employed in the training step. Make sure you now assess the model using an unseen test dataset. How does the performance of the model change when evaluated on the test set?
+
+Instructions
+100 XP
+Import the function required for a train/test split.
+Perform the train/test split, specifying that 20% of the data should be used as a test set.
+Train a logistic regression model.
+Print out the accuracy of the model on the training and on the testing data.
+
+
+# Import the required packages
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+# Define the vector of labels and matrix of features
+y = movies.label
+X = movies.drop('label', axis=1)
+
+# Perform the train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a logistic regression model and print out the accuracy
+log_reg = LogisticRegression().fit(X_train,y_train)
+print('Accuracy on train set: ', log_reg.score(X_train,y_train))
+print('Accuracy on test set: ', log_reg.score(X_test, y_test))
+
+
+Performance metrics of Twitter data
+You will train a logistic regression model that predicts the sentiment of tweets and evaluate its performance on the test set using different metrics.
+
+A matrix X has been created for you. It contains features created with a BOW on the text column.
+
+The labels are stored in a vector called y. Vector y is 0 for negative tweets, 1 for neutral, and 2 for positive ones.
+Note that although we have 3 classes, it is still a classification problem. The accuracy still measures the proportion of correctly predicted instances. The confusion matrix will now be of size 3x3, each row will give the number of predicted cases for classes 2, 1, and 0, and each column - the true number of cases in class 2, 1, and 0.
+
+All required packages have been imported for you.
+
+Instructions
+100 XP
+Perform the train/test split, and stratify by y.
+Train a a logistic regression classifier.
+Predict the performance on the test set.
+Print the accuracy score and confusion matrix obtained on the test set.
+
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=123, stratify=y)
+
+# Train a logistic regression
+log_reg = LogisticRegression().fit(X_train, y_train)
+
+# Make predictions on the test set
+y_predicted = log_reg.predict(X_test)
+
+# Print the performance metrics
+print('Accuracy score test set: ', accuracy_score(y_test, y_predicted))
+print('Confusion matrix test set: \n', confusion_matrix(y_test, y_predicted)/len(y_test))
+
+
+
+Build and assess a model: product reviews data
+In this exercise, you will build a logistic regression using the reviews dataset, containing customers' reviews of Amazon products. The array y contains the sentiment : 1 if positive and 0 otherwise. The array X contains all numeric features created using a BOW approach. Feel free to explore them in the IPython Shell.
+
+Your task is to build a logistic regression model and calculate the accuracy and confusion matrix using the test dataset.
+
+The logistic regression and train/test splitting functions have been imported for you.
+
+Instructions
+100 XP
+Import the accuracy score and confusion matrix functions.
+Split the data into training and testing, using 30% of it as a test set and set the random seed to 42.
+Train a logistic regression model.
+Print out the accuracy score and confusion matrix using the test data
+
+
+
+# Import the accuracy and confusion matrix
+from sklearn.metrics import accuracy_score , confusion_matrix
+
+# Split the data into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Build a logistic regression
+log_reg = LogisticRegression().fit(X_train,y_train)
+
+# Predict the labels 
+y_predict = log_reg.predict(X_test)
+
+# Print the performance metrics
+print('Accuracy score of test data: ', accuracy_score(y_test, y_predict))
+print('Confusion matrix of test data: \n', confusion_matrix(y_test, y_predict)/len(y_test))
+
+
+Predict probabilities of movie reviews
+In this problem, you will build a logistic regression using the movies dataset. The labels are stored in the arrayy and the features in X.
+
+Train the model on the training data. Instead of predicting classes, predict the probabilities that each instance in the test set belongs to each of the two classes.
+
+The logistic regression and train/test splitting functions have been imported for you.
+
+Instructions
+100 XP
+Split the data into training and testing set.
+Train a logistic regression model.
+Predict the probabilities for class 0 and for class 1 of the testing data. Class 0 is located as the first column in the predicted probabilities, and class 1 is the second one.
+
+
+# Split into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=321)
+
+# Train a logistic regression
+log_reg = LogisticRegression().fit(X_train,y_train)
+
+# Predict the probability of the 0 class
+prob_0 = log_reg.predict_proba(X_test)[:, 0]
+# Predict the probability of the 1 class
+prob_1 = log_reg.predict_proba(X_test)[:, 1]
+
+print("First 10 predicted probabilities of class 0: ", prob_0[:10])
+print("First 10 predicted probabilities of class 1: ", prob_1[:10])
+
+
+Product reviews with regularization
+In this exercise, you will work once more with the reviews dataset of Amazon product reviews. A vector of labels y contains the sentiment : 1 if positive and 0 otherwise. The matrix X contains all numeric features created using a BOW approach.
+
+You will need to train two logistic regression models with different levels of regularization and compare how they perform on the test data. Remember that regularization is a way to control the complexity of the model. The more regularized a model is, the less flexible it is but the better it can generalize. Models with higher level of regularization are often less accurate than non-regularized ones.
+
+Instructions
+100 XP
+Split the data into a train and test sets.
+Train a logistic regression with regularization parameter of 1000. Train a second logistic regression with regularization parameter equal to 0.001.
+Print the accuracy scores of both models on the test set.
+
+
+
+# Split data into training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+
+# Train a logistic regression with regularization of 1000
+log_reg1 = LogisticRegression(C=1000).fit(X_train, y_train)
+# Train a logistic regression with regularization of 0.001
+log_reg2 = LogisticRegression(C=0.001).fit(X_train, y_train)
+
+# Print the accuracies
+print('Accuracy of model 1: ', log_reg1.score(X_test, y_test))
+print('Accuracy of model 2: ', log_reg2.score(X_test, y_test))
+
+
+
+
+Regularizing models with Twitter data
+You will work with the Twitter data expressing customers' sentiment about airline companies. The X matrix of features and y vector of labels have been created for you. In addition, the training and testing split has been performed. You can work with the X_train, X_test, y_train and y_test arrays directly.
+
+You will train regularized and a more flexible models and evaluate them using different model performance metrics.
+
+All required packages have been imported for you.
+
+Instructions
+100 XP
+Train two logistic regressions: one with regularization parameter of 100 and a second of 0.1.
+Print the accuracy scores of both models.
+Print the confusion matrix of each model.
+
+
+# Build a logistic regression with regularizarion parameter of 100
+log_reg1 = LogisticRegression(C = 100).fit(X_train,y_train)
+# Build a logistic regression with regularizarion parameter of 0.1
+log_reg2 = LogisticRegression(C = 0.1).fit(X_train,y_train)
+
+# Predict the labels for each model
+y_predict1 = log_reg1.predict(X_test)
+y_predict2 = log_reg2.predict(X_test)
+
+# Print performance metrics for each model
+print('Accuracy of model 1: ', accuracy_score(y_test, y_predict1))
+print('Accuracy of model 2: ', accuracy_score(y_test, y_predict2))
+print('Confusion matrix of model 1: \n' , confusion_matrix(y_test, y_predict1)/len(y_test))
+print('Confusion matrix of model 2: \n', confusion_matrix(y_test, y_predict2)/len(y_test))
+
+
+
+Step 1: Word cloud and feature creation
+You will work with a sample of the reviews dataset throughout this exercise. It contains the review and score columns. Feel free to explore it in the IPython Shell.
+
+In the first step, you will build a word cloud using only positive reviews. The string positive_reviews has been created for you by concatenating the top 100 positive reviews.
+
+In the second step, you will create a new feature for the length of each review and add that new feature to the dataset.
+
+All the functions needed to plot a word cloud have been imported for you, as well as the word_tokenize function from the nltk module.
+
+Instructions 1/2
+50 XP
+1
+2
+Call and create a word cloud image using the positive_reviews.
+Display the generated image.
+
+
+# Create and generate a word cloud image
+cloud_positives = WordCloud(background_color='white').generate(positive_reviews)
+ 
+# Display the generated wordcloud image
+plt.imshow(cloud_positives, interpolation='bilinear') 
+plt.axis("off")
+
+# Don't forget to show the final image
+plt.show()
+
+
+Tokenize each item in the review column, using the word tokenizing function we have been working with.
+Iterate over the created word_tokens list and find the length of each item in the list. Append that length to the empty len_tokens list.
+
+
+# Tokenize each item in the review column
+word_tokens = [word_tokenize(review) for review in reviews.review]
+
+# Create an empty list to store the length of the reviews
+len_tokens = []
+
+# Iterate over the word_tokens list and determine the length of each item
+for i in range(len(word_tokens)):
+     len_tokens.append(len(word_tokens[i]))
+
+# Create a new feature for the lengh of each review
+reviews['n_words'] = len_tokens 
+
+
+Step 2: Building a vectorizer
+In this exercise, you are asked to build a TfIDf transformation of the review column in the reviews dataset. You are asked to specify the n-grams, stop words, the pattern of tokens and the size of the vocabulary arguments.
+
+This is the last step before we train a classifier to predict the sentiment of a review.
+
+Make sure you specify the maximum number of features properly, as a very large vocabulary size could disconnect your session.
+
+Instructions
+100 XP
+Import the Tfidf vectorizer and the default list of English stop words.
+Build the Tfidf vectorizer, specifying - in this order - the following arguments: use as stop words the default list of English stop words; as n-grams use uni- and bi-grams;the maximum number of features should be 200; capture only words using the specified pattern.
+Create a DataFrame using the Tfidf vectorizer.
+
+
+# Import the TfidfVectorizer and default list of English stop words
+from sklearn.feature_extraction.text import TfidfVectorizer, ENGLISH_STOP_WORDS
+
+# Build the vectorizer
+vect = TfidfVectorizer(stop_words=ENGLISH_STOP_WORDS, ngram_range =(1, 2), max_features=200, token_pattern=r'\b[^\d\W][^\d\W]+\b').fit(reviews.review)
+# Create sparse matrix from the vectorizer
+X = vect.transform(reviews.review)
+
+# Create a DataFrame
+reviews_transformed = pd.DataFrame(X.toarray(), columns=vect.get_feature_names())
+print('Top 5 rows of the DataFrame: \n', reviews_transformed.head())
+
+
+Step 3: Building a classifier
+This is the last step in the sentiment analysis prediction. We have explored and enriched our dataset with features related to the sentiment, and created numeric vectors from it.
+
+You will use the dataset that you built in the previous steps. Namely, it contains a feature for the length of reviews, and 200 features created with the Tfidf vectorizer.
+
+Your task is to train a logistic regression to predict the sentiment. The data has been imported for you and is called reviews_transformed. The target is called score and is binary : 1 when the product review is positive and 0 otherwise.
+
+Train a logistic regression model and evaluate its performance on the test data. How well does the model do?
+
+All the required packages have been imported for you.
+
+Instructions
+100 XP
+Perform the train/test split, allocating 20% of the data to testing and setting the random seed to 456.
+Train a logistic regression model.
+Predict the class.
+Print out the accuracy score and the confusion matrix on the test set.
+
+# Define X and y
+y = reviews_transformed.score
+X = reviews_transformed.drop('score', axis=1)
+
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=456)
+
+# Train a logistic regression
+log_reg = LogisticRegression().fit(X_train, y_train)
+# Predict the labels
+y_predicted = log_reg.predict(X_test)
+
+# Print accuracy score and confusion matrix on test set
+print('Accuracy on the test set: ', accuracy_score(y_test, y_predicted))
+print(confusion_matrix(y_test, y_predicted)/len(y_test))
+
+
+
+
+
