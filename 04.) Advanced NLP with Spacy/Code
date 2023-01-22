@@ -741,3 +741,703 @@ for match_id, start, end in matcher(doc):
     span_root_head = span.root.head
     # Print the text of the span root's head token and the span text
     print(span_root_head.text, '-->', span.text)
+
+
+
+What happens when you call nlp?
+What does spaCy do when you call nlp on a string of text? The IPython shell has a pre-loaded nlp object that logs what's going on under the hood. Try processing a text with it!
+
+doc = nlp("This is a sentence.")
+
+
+Tokenize the text and apply each pipeline component in order.
+
+Inspecting the pipeline
+Let's inspect the small English model's pipeline!
+
+Instructions
+100 XP
+Load the en_core_web_sm model and create the nlp object.
+Print the names of the pipeline components using nlp.pipe_names.
+Print the full pipeline of (name, component) tuples using nlp.pipeline.
+
+# Load the en_core_web_sm model
+nlp = spacy.load('en_core_web_sm')
+
+# Print the names of the pipeline components
+print(nlp.pipe_names)
+
+# Print the full pipeline of (name, component) tuples
+print(nlp.pipeline)
+
+
+Use cases for custom components
+Which of these problems can be solved by custom pipeline components? Choose all that apply!
+
+updating the pre-trained models and improving their predictions
+computing your own values based on tokens and their attributes
+adding named entities, for example based on a dictionary
+implementing support for an additional language
+
+2 and 3
+
+
+
+
+Simple components
+The example shows a custom component that prints the character length of a document. Can you complete it? spacy has already been imported for you.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Complete the component function with the doc's length.
+
+# Define the custom component
+def length_component(doc):
+    # Get the doc's length
+    doc_length = len(doc)
+    print("This document is {} tokens long.".format(doc_length))
+    # Return the doc
+    return doc
+    
+    Add the length_component to the existing pipeline as the first component.
+
+# Define the custom component
+def length_component(doc):
+    # Get the doc's length
+    doc_length = len(doc)
+    print("This document is {} tokens long.".format(doc_length))
+    # Return the doc
+    return doc
+
+# Load the small English model
+nlp = spacy.load('en_core_web_sm')
+  
+# Add the component first in the pipeline and print the pipe names
+nlp.add_pipe(length_component , first = True)
+print(nlp.pipe_names)
+
+Try out the new pipeline and process any text with the nlp object – for example "This is a sentence.".
+
+# Define the custom component
+def length_component(doc):
+    # Get the doc's length
+    doc_length = len(doc)
+    print("This document is {} tokens long.".format(doc_length))
+    # Return the doc
+    return doc
+  
+# Load the small English model and Add the component first in the pipeline
+nlp = spacy.load('en_core_web_sm')
+nlp.add_pipe(length_component, first=True)
+
+# Process a text
+doc = nlp('This is a sentence')
+
+
+Complex components
+In this exercise, you'll be writing a custom component that uses the PhraseMatcher to find animal names in the document and adds the matched spans to the doc.ents.
+
+A PhraseMatcher with the animal patterns has already been created as the variable matcher. The small English model is available as the variable nlp. The Span object has already been imported for you.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Define the custom component and apply the matcher to the doc.
+Create a Span for each match, assign the label ID for 'ANIMAL' and overwrite the doc.ents with the new spans.
+
+# Define the custom component
+def animal_component(doc):
+    # Apply the matcher to the doc
+    matches = matcher(doc)
+    # Create a Span for each match and assign the label 'ANIMAL'
+    spans = [Span(doc, start, end, label='ANIMAL')
+             for match_id, start, end in matches]
+    # Overwrite the doc.ents with the matched spans
+    doc.ents = spans
+    return doc
+    
+    
+ Add the new component to the pipeline after the 'ner' component.
+ 
+ 
+ # Define the custom component
+def animal_component(doc):
+    # Apply the matcher to the doc
+    matches = matcher(doc)
+    # Create a Span for each match and assign the label 'ANIMAL'
+    spans = [Span(doc, start, end, label='ANIMAL')
+             for match_id, start, end in matches]
+    # Overwrite the doc.ents with the matched spans
+    doc.ents = spans
+    return doc
+
+# Add the component to the pipeline after the 'ner' component 
+nlp.add_pipe(animal_component, after='ner')
+print(nlp.pipe_names)
+
+
+Process the text and print the entity text and entity label for the entities in doc.ents.
+
+
+
+# Define the custom component
+def animal_component(doc):
+    # Create a Span for each match and assign the label 'ANIMAL'
+    # and overwrite the doc.ents with the matched spans
+    doc.ents = [Span(doc, start, end, label='ANIMAL')
+                for match_id, start, end in matcher(doc)]
+    return doc
+    
+# Add the component to the pipeline after the 'ner' component 
+nlp.add_pipe(animal_component, after='ner')
+
+# Process the text and print the text and label for the doc.ents
+doc = nlp("I have a cat and a Golden Retriever")
+print([(ent.text, ent.label_) for ent in doc.ents])
+
+
+Setting extension attributes (1)
+Let's practice setting some extension attributes. The nlp object has already been created for you and the Doc, Token and Span classes are already imported.
+
+Remember that if you run your code more than once, you might see an error message that the extension already exists. That's because DataCamp will re-run your code in the same session. To solve this, you can set force=True on set_extension, or reload to start a new Python session. None of this will affect the answer you submit.
+
+Instructions 1/2
+50 XP
+1
+Use Token.set_extension to register is_country (default False).
+Update it for "Spain" and print it for all tokens.
+
+# Register the Token extension attribute 'is_country' with the default value False
+Token.set_extension('is_country', default =  False)
+
+# Process the text and set the is_country attribute to True for the token "Spain"
+doc = nlp("I live in Spain.")
+doc[3]._.is_country = True
+
+# Print the token text and the is_country attribute for all tokens
+print([(token.text, token._.is_country) for token in doc])
+
+
+Use Token.set_extension to register 'reversed' (getter function get_reversed).
+Print its value for each token.
+
+# Define the getter function that takes a token and returns its reversed text
+def get_reversed(token):
+    return token.text[::-1]
+  
+# Register the Token property extension 'reversed' with the getter get_reversed
+Token.set_extension('reversed', getter=get_reversed)
+
+# Process the text and print the reversed attribute for each token
+doc = nlp("All generalizations are false, including this one.")
+for token in doc:
+    print('reversed:', token._.reversed)
+    
+  
+Setting extension attributes (2)
+Let's try setting some more complex attributes using getters and method extensions. The nlp object has already been created for you and the Doc, Token and Span classes are already imported.
+
+Remember that if you run your code more than once, you might see an error message that the extension already exists. That's because DataCamp will re-run your code in the same session. To solve this, you can set force=True on set_extension, or reload to start a new Python session. None of this will affect the answer you submit.
+
+Instructions 1/2
+50 XP
+1
+Complete the has_number function .
+Use Doc.set_extension to register 'has_number' (getter get_has_number) and print its value.
+
+# Define the getter function
+def get_has_number(doc):
+    # Return if any of the tokens in the doc return True for token.like_num
+    return any(token.like_num  for token in doc)
+
+# Register the Doc property extension 'has_number' with the getter get_has_number
+Doc.set_extension('has_number', getter=get_has_number)
+
+# Process the text and check the custom has_number attribute 
+doc = nlp("The museum closed for five years in 2012.")
+print('has_number:', doc._.has_number)
+
+# Define the method
+def to_html(span, tag):
+    # Wrap the span text in a HTML tag and return it
+    return '<{tag}>{text}</{tag}>'.format(tag=tag, text=span.text)
+
+# Register the Span property extension 'to_html' with the method to_html
+Span.set_extension('to_html', method =to_html)
+
+# Process the text and call the to_html method on the span with the tag name 'strong'
+doc = nlp("Hello world, this is a sentence.")
+span = doc[0:2]
+print(span._.to_html('strong'), 'strong')
+
+
+Entities and extensions
+In this exercise, you'll combine custom extension attributes with the model's predictions and create an attribute getter that returns a Wikipedia search URL if the span is a person, organization, or location.
+
+The Span class is already imported and the nlp object has been created for you.
+
+Instructions
+100 XP
+Complete the get_wikipedia_url getter so it only returns the URL if the span's label is in the list of labels.
+Set the Span extension 'wikipedia_url' using the getter get_wikipedia_url.
+Iterate over the entities in the doc and output their Wikipedia URL.
+
+def get_wikipedia_url(span):
+    # Get a Wikipedia URL if the span has one of the labels
+    if span.label_ in ('PERSON', 'ORG', 'GPE', 'LOCATION'):
+        entity_text = span.text.replace(' ', '_')
+        return "https://en.wikipedia.org/w/index.php?search=" + entity_text
+
+# Set the Span extension wikipedia_url using get getter get_wikipedia_url
+Span.set_extension('wikipedia_url', getter=get_wikipedia_url)
+
+doc = nlp("In over fifty years from his very first recordings right through to his last album, David Bowie was at the vanguard of contemporary culture.")
+for ent in doc.ents:
+    # Print the text and Wikipedia URL of the entity
+    print(ent.text, ent._.wikipedia_url)
+    
+    
+  Components with extensions
+Extension attributes are especially powerful if they're combined with custom pipeline components. In this exercise, you'll write a pipeline component that finds country names and a custom extension attribute that returns a country's capital, if available.
+
+The nlp object has already been created and the Span class is already imported. A phrase matcher with all countries is available as the variable matcher. A dictionary of countries mapped to their capital cities is available as the variable capitals.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Complete the countries_component and create a Span with the label 'GPE' (geopolitical entity) for all matches.
+Add the component to the pipeline.
+
+def countries_component(doc):
+    # Create an entity Span with the label 'GPE' for all matches
+    doc.ents = [Span(doc, start, end, label='GPE')
+                for match_id, start, end in matcher(doc)]
+    return doc
+
+# Add the component to the pipeline
+nlp.add_pipe(countries_component)
+print(nlp.pipe_names)
+
+def countries_component(doc):
+    # Create an entity Span with the label 'GPE' for all matches
+    doc.ents = [Span(doc, start, end, label='GPE')
+                for match_id, start, end in matcher(doc)]
+    return doc
+
+# Add the component to the pipeline
+nlp.add_pipe(countries_component)
+
+# Getter that looks up the span text in the dictionary of country capitals
+get_capital = lambda span: capitals.get(span.text)
+
+# Register the Span extension attribute 'capital' with the getter get_capital 
+Span.set_extension('capital', getter=get_capital)
+
+
+Process the text and print the entity text, entity label and entity capital for each entity span in doc.ents.
+
+def countries_component(doc):
+    # Create an entity Span with the label 'GPE' for all matches
+    doc.ents = [Span(doc, start, end, label='GPE')
+                for match_id, start, end in matcher(doc)]
+    return doc
+
+# Add the component to the pipeline
+nlp.add_pipe(countries_component)
+
+# Register capital and getter that looks up the span text in country capitals
+Span.set_extension('capital', getter=lambda span: capitals.get(span.text))
+
+# Process the text and print the entity text, label and capital attributes
+doc = nlp("Czech Republic may help Slovakia protect its airspace")
+print([( ent.text, ent.label_, ent._.capital) for ent in doc.ents])
+
+
+Processing streams
+In this exercise, you'll be using nlp.pipe for more efficient text processing. The nlp object has already been created for you. A list of tweets about a popular American fast food chain are available as the variable TEXTS.
+
+Instructions 1/3
+35 XP
+1
+Rewrite the example to use nlp.pipe. Instead of iterating over the texts and processing them, iterate over the doc objects yielded by nlp.pipe.
+
+# Process the texts and print the adjectives
+for doc in nlp.pipe(TEXTS):
+    print([token.text for token in doc if token.pos_ == 'ADJ'])
+    
+    Rewrite the example to use nlp.pipe. Don't forget to call list() around the result to turn it into a list.
+    
+    
+ # Process the texts and print the entities
+docs = list(nlp.pipe(TEXTS))
+entities = [doc.ents for doc in docs]
+print(*entities)
+
+
+
+Rewrite the example to use nlp.pipe. Don't forget to call list() around the result to turn it into a list.
+
+people = ['David Bowie', 'Angela Merkel', 'Lady Gaga']
+
+# Create a list of patterns for the PhraseMatcher
+patterns = list(nlp.pipe(people))
+
+Exercise
+Exercise
+Processing data with context
+In this exercise, you'll be using custom attributes to add author and book meta information to quotes.
+
+A list of (text, context) examples is available as the variable DATA. The texts are quotes from famous books, and the contexts dictionaries with the keys 'author' and 'book'. The nlp object has already been created for you.
+
+Instructions 1/2
+50 XP
+1
+2
+Import the Doc class and use the set_extension method to register the custom attributes 'author' and 'book', which default to None.
+
+# Import the Doc class
+from spacy.tokens import Doc
+
+# Register the Doc extension 'author' (default None)
+Doc.set_extension('author', default=None)
+
+# Register the Doc extension 'book' (default None)
+Doc.set_extension('book', default=None)
+
+
+Process the (text, context) tuples in DATA using nlp.pipe with as_tuples=True.
+Overwrite the doc._.book and doc._.author with the respective info passed in as the context.
+
+# Import the Doc class and register the extensions 'author' and 'book'
+from spacy.tokens import Doc
+Doc.set_extension('book', default=None)
+Doc.set_extension('author', default=None)
+
+for doc, context in nlp.pipe(DATA, as_tuples=True):
+    # Set the doc._.book and doc._.author attributes from the context
+    doc._.book = context['book']
+    doc._.author = context['author']
+    
+    # Print the text and custom attribute data
+    print(doc.text, '\n', "— '{}' by {}".format(doc._.book, doc._.author), '\n')
+    
+ 
+ Selective processing
+In this exercise, you'll use the nlp.make_doc and nlp.disable_pipes methods to only run selected components when processing a text. The small English model is already loaded in as the nlp object.
+
+Instructions 1/2
+50 XP
+1
+2
+Rewrite the code to only tokenize the text using nlp.make_doc.
+
+text = "Chick-fil-A is an American fast food restaurant chain headquartered in the city of College Park, Georgia, specializing in chicken sandwiches."
+
+# Only tokenize the text
+doc = nlp.make_doc(text)
+
+print([token.text for token in doc])
+
+text = "Chick-fil-A is an American fast food restaurant chain headquartered in the city of College Park, Georgia, specializing in chicken sandwiches."
+
+# Disable the tagger and parser
+with nlp.disable_pipes('tagger', 'parser'):
+    # Process the text
+    doc = nlp(text)
+    # Print the entities in the doc
+    print(doc.ents)
+    
+    Purpose of training
+While spaCy comes with a range of pre-trained models to predict linguistic annotations, you almost always want to fine-tune them with more examples. You can do this by training them with more labelled data.
+
+What does training not help with?
+
+
+Discover patterns in unlabelled data.
+
+
+Creating training data (1)
+spaCy's rule-based Matcher is a great way to quickly create training data for named entity models. A list of sentences is available as the variable TEXTS. You can print it the IPython shell to inspect it. We want to find all mentions of different iPhone models, so we can create training data to teach a model to recognize them as 'GADGET'.
+
+The nlp object has already been created for you and the Matcher is available as the variable matcher.
+
+Instructions
+100 XP
+Write a pattern for two tokens whose lowercase forms match 'iphone' and 'x'.
+Write a pattern for two tokens: one token whose lowercase form matches 'iphone' and an optional digit using the '?' operator.
+
+# Two tokens whose lowercase forms match 'iphone' and 'x'
+pattern1 = [{'LOWER': 'iphone'}, {'LOWER': 'x'}]
+
+# Token whose lowercase form matches 'iphone' and an optional digit
+pattern2 = [{'LOWER': 'iphone'}, {'IS_DIGIT': True, 'OP': '?'}]
+
+# Add patterns to the matcher
+matcher.add('GADGET', None, pattern1, pattern2)
+
+
+Creating training data (2)
+Let's use the match patterns we've created in the previous exercise to bootstrap a set of training examples. The nlp object has already been created for you and the Matcher with the added patterns pattern1 and pattern2 is available as the variable matcher. A list of sentences is available as the variable TEXTS.
+
+Instructions 1/2
+50 XP
+1
+2
+Create a doc object for each text using nlp.pipe and find the matches in it.
+Create a list of (start, end, label) tuples for the matches.
+
+# Create a Doc object for each text in TEXTS
+for doc in nlp.pipe(TEXTS):
+    # Find the matches in the doc
+    matches = matcher(doc)
+    
+    # Get a list of (start, end, label) tuples of matches in the text
+    entities = [(start, end, 'GADGET') for match_id, start, end in matches]
+    print(doc.text, entities)    
+    
+    
+ Match on the doc and create a list of matched spans.
+Format each example as a tuple of the text and a dict, mapping 'entities' to the entity tuples.
+Append the example to TRAINING_DATA and inspect the printed data.
+
+
+TRAINING_DATA = []
+
+# Create a Doc object for each text in TEXTS
+for doc in nlp.pipe(TEXTS):
+    # Match on the doc and create a list of matched spans
+    spans = [doc[start:end] for match_id, start, end in matcher(doc)]
+    # Get (start character, end character, label) tuples of matches
+    entities = [(span.start_char, span.end_char, 'GADGET') for span in spans]
+    
+    # Format the matches as a (doc.text, entities) tuple
+    training_example = (doc.text, {'entities': entities})
+    # Append the example to the training data
+    TRAINING_DATA.append(training_example)
+    
+print(*TRAINING_DATA, sep='\n')    
+
+
+Setting up the pipeline
+In this exercise, you'll prepare a spaCy pipeline to train the entity recognizer to recognize 'GADGET' entities in a text – for exampe, "iPhone X".
+
+spacy has already been imported for you.
+
+Instructions 1/3
+50 XP
+1
+2
+3
+Create a blank 'en' model, for example using the spacy.blank method.
+
+# Create a blank 'en' model
+nlp = spacy.blank('en')
+
+Create a new entity recognizer using nlp.create_pipe and add it to the pipeline.
+
+# Create a blank 'en' model
+nlp = spacy.blank('en')
+
+# Create a new entity recognizer and add it to the pipeline
+ner = nlp.create_pipe('ner')
+nlp.add_pipe(ner)
+
+Add the new label 'GADGET' to the entity recognizer using the add_label method on the pipeline component.
+
+# Create a blank 'en' model
+nlp = spacy.blank('en')
+
+# Create a new entity recognizer and add it to the pipeline
+ner = nlp.create_pipe('ner')
+nlp.add_pipe(ner)
+
+# Add the label 'GADGET' to the entity recognizer
+ner.add_label('GADGET')
+
+
+Building a training loop
+Let's write a simple training loop from scratch!
+
+The pipeline you've created in the previous exercise is available as the nlp object. It already contains the entity recognizer with the added label 'GADGET'.
+
+The small set of labelled examples that you've created previously is available as the global variable TRAINING_DATA. To see the examples, you can print them in your script or in the IPython shell. spacy and random have already been imported for you.
+
+Instructions 1/3
+50 XP
+1
+2
+3
+Call nlp.begin_training, create a training loop for 10 iterations and shuffle the training data.
+
+# Start the training
+nlp.begin_training()
+
+# Loop for 10 iterations
+for itn in range(10):
+    # Shuffle the training data
+    random.shuffle(TRAINING_DATA)
+    
+    
+    Create batches of training data using spacy.util.minibatch and iterate over the batches.
+Convert the (text, annotations) tuples in the batch to lists of texts and annotations.
+
+# Start the training
+nlp.begin_training()
+
+# Loop for 10 iterations
+for itn in range(10):
+    # Shuffle the training data
+    random.shuffle(TRAINING_DATA)
+    losses = {}
+    
+    # Batch the examples and iterate over them
+    for batch in spacy.util.minibatch(TRAINING_DATA, size=2):
+        texts = [text for text, entities in batch]
+        annotations = [entities for text, entities in batch]
+        
+        
+        
+   For each batch, use nlp.update to update the model with the texts and annotations.
+
+
+# Start the training
+nlp.begin_training()
+
+# Loop for 10 iterations
+for itn in range(10):
+    # Shuffle the training data
+    random.shuffle(TRAINING_DATA)
+    losses = {}
+    
+    # Batch the examples and iterate over them
+    for batch in spacy.util.minibatch(TRAINING_DATA, size=2):
+        texts = [text for text, entities in batch]
+        annotations = [entities for text, entities in batch]
+        
+        # Update the model
+        nlp.update(texts, annotations, losses=losses)
+        print(losses)
+        
+
+Exploring the model
+Let's see how the model performs on unseen data! To speed things up a little, here's a trained model for the label 'GADGET', using the examples from the previous exercise, plus a few hundred more. The loaded model is already available as the nlp object. A list of test texts is available as TEST_DATA.
+
+Instructions 1/2
+50 XP
+1
+2
+Process each text in TEST_DATA using nlp.pipe.
+Print the document text and the entities in the text.
+
+# Process each text in TEST_DATA
+for doc in nlp.pipe(TEST_DATA):
+    # Print the document text and entitites
+    print(doc.text)
+    print(doc.ents, '\n\n')
+    
+ 
+Exploring the model
+Let's see how the model performs on unseen data! To speed things up a little, here's a trained model for the label 'GADGET', using the examples from the previous exercise, plus a few hundred more. The loaded model is already available as the nlp object. A list of test texts is available as TEST_DATA.
+
+Instructions 2/2
+50 XP
+2
+Question
+Out of all the entities in the texts, how many did the model get correct? Keep in mind that incomplete entity spans count as mistakes, too!
+
+70%
+
+
+Good data vs. bad data
+Here's an excerpt from a training set that labels the entity type TOURIST_DESTINATION in traveler reviews.
+
+Instructions 1/2
+50 XP
+2
+Question
+Why is this data and label scheme problematic?
+
+Possible Answers
+
+Whether a place is a tourist destination is a subjective judgement and not a definitive category. It will be very difficult for the entity recognizer to learn.
+
+
+Good data vs. bad data
+Here's an excerpt from a training set that labels the entity type TOURIST_DESTINATION in traveler reviews.
+
+Instructions 2/2
+50 XP
+2
+Rewrite the TRAINING_DATA to only use the label GPE (cities, states, countries) instead of TOURIST_DESTINATION.
+Don't forget to add tuples for the GPE entities that weren't labeled in the old data.
+
+TRAINING_DATA = [
+    ("i went to amsterdem last year and the canals were beautiful", {'entities': [(10, 19, 'GPE')]}),
+    ("You should visit Paris once in your life, but the Eiffel Tower is kinda boring", {'entities': [(17, 22, 'GPE')]}),
+    ("There's also a Paris in Arkansas, lol", {'entities': [(15, 20, 'GPE'), (24, 32, 'GPE')]}),
+    ("Berlin is perfect for summer holiday: lots of parks, great nightlife, cheap beer!", {'entities': [(0, 6, 'GPE')]})
+]
+
+print(*TRAINING_DATA, sep='\n')
+
+
+Training multiple labels
+Here's a small sample of a dataset created to train a new entity type WEBSITE. The original dataset contains a few thousand sentences. In this exercise, you'll be doing the labeling by hand. In real life, you probably want to automate this and use an annotation tool – for example, Brat, a popular open-source solution, or Prodigy, our own annotation tool that integrates with spaCy.
+
+After this exercise you will be nearly done with the course! If you enjoyed it, feel free to send Ines a thank you via Twitter - she'll appreciate it! Tweet to Ines
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Complete the entity offsets for the WEBSITE entities in the data. Feel free to use len() if you don't want to count the characters.
+
+TRAINING_DATA = [
+    ("Reddit partners with Patreon to help creators build communities", 
+     {'entities': [(0, 6, 'WEBSITE'), (21, 28, 'WEBSITE')]}),
+  
+    ("PewDiePie smashes YouTube record", 
+     {'entities': [(18, 25, 'WEBSITE')]}),
+  
+    ("Reddit founder Alexis Ohanian gave away two Metallica tickets to fans", 
+     {'entities': [(0, 6, 'WEBSITE')]}),
+    # And so on...
+]
+
+Training multiple labels
+Here's a small sample of a dataset created to train a new entity type WEBSITE. The original dataset contains a few thousand sentences. In this exercise, you'll be doing the labeling by hand. In real life, you probably want to automate this and use an annotation tool – for example, Brat, a popular open-source solution, or Prodigy, our own annotation tool that integrates with spaCy.
+
+After this exercise you will be nearly done with the course! If you enjoyed it, feel free to send Ines a thank you via Twitter - she'll appreciate it! Tweet to Ines
+
+Instructions 2/3
+35 XP
+2
+3
+Question
+A model was trained with the data you just labelled, plus a few thousand similar examples. After training, it's doing great on WEBSITE, but doesn't recognize PERSON anymore. Why could this be happening?
+
+
+The training data included no examples of PERSON, so the model learned that this label is incorrect.
+
+
+Update the training data to include annotations for the PERSON entities "PewDiePie" and "Alexis Ohanian".
+
+TRAINING_DATA = [
+    ("Reddit partners with Patreon to help creators build communities", 
+     {'entities': [(0, 6, 'WEBSITE'), (21, 28, 'WEBSITE')]}),
+  
+    ("PewDiePie smashes YouTube record", 
+     {'entities': [(0, 9, 'PERSON'), (18, 25, 'WEBSITE')]}),
+  
+    ("Reddit founder Alexis Ohanian gave away two Metallica tickets to fans", 
+     {'entities': [(0, 6, 'WEBSITE'), (15, 29, 'PERSON')]}),
+    # And so on...
+]
