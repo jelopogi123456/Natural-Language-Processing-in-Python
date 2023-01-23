@@ -1,0 +1,510 @@
+Spoken Language Processing in Python
+
+The right frequency
+Movies play multiple pictures per second succession to give the illusion of moving pictures, sound is similar but usually at a much larger rate. What's the standard unit of measure for sound frequency?
+
+
+Hz (Hertz)
+
+Importing an audio file with Python
+You've seen how there are different kinds of audio files and how streaming music and spoken language have different sampling rates. But now we want to start working with these files.
+
+To begin, we're going to import the good_morning.wav audio file using Python's in-built wave library. Then we'll see what it looks like in byte form using the built-in readframes() method.
+
+You can listen to good_morning.wav here.
+
+Remember, good_morning.wav is only a few seconds long but at 48 kHz, that means it contains 48,000 pieces of information per second.
+
+Instructions
+100 XP
+Import the Python wave library.
+Read in the good_morning.wav audio file and save it to good_morning.
+Create signal_gm by reading all the frames from good_morning using readframes().
+See what the first 10 frames of audio look like by slicing signal_gm.
+
+
+import wave
+
+# Create audio file wave object
+good_morning = wave.open('good_morning.wav', 'r')
+
+# Read all frames from wave object 
+signal_gm = good_morning.readframes(-1)
+
+# View first 10
+print(signal_gm[:10])
+
+
+The right data type
+dtype defaults to float in np.frombuffer(), what's the correct dtype to set it to for visualizing sound wave bytes?
+
+You can try the different options by running np.frombuffer(signal_gm, dtype=____).
+
+
+'int16'
+
+
+
+Bytes to integers
+You've seen how to import and read an audio file using Python's wave module and the readframes() method. But doing that results in an array of bytes.
+
+To convert the bytes into something more useful, we'll use NumPy's frombuffer() method.
+
+Passing frombuffer() our sound waves bytes and indicating a dtype of 'int16', we can convert our bytes to integers. Integers are much easier to work with than bytes.
+
+The Python wave library has already been imported along with the good_morning.wav audio file.
+
+Instructions
+100 XP
+Import the numpy package with its common alias np.
+Open and read the good morning audio file.
+Convert the signal_gm bytes to int16 integers.
+View the first 10 sound wave values.
+
+import numpy as np
+
+# Open good morning sound wave and read frames as bytes
+good_morning = wave.open('good_morning.wav', 'r')
+signal_gm = good_morning.readframes(-1)
+
+# Convert good morning audio bytes to integers
+soundwave_gm = np.frombuffer(signal_gm, dtype='int16')
+
+# View the first 10 sound wave values
+print(soundwave_gm[:10])
+
+
+Finding the time stamps
+We know the frequency of our sound wave is 48 kHz, but what if we didn't? We could find it by dividing the length of our sound wave array by the duration of our sound wave. However, Python's wave module has a better way. Calling getframerate() on a wave object returns the frame rate of that wave object.
+
+We can then use NumPy's linspace() method to find the time stamp of each integer in our sound wave array. This will help us visualize our sound wave in the future.
+
+The linspace() method takes start, stop and num parameters and returns num evenly spaced values between start and stop.
+
+In our case, start will be zero, stop will be the length of our sound wave array over the frame rate (or the duration of our audio file) and num will be the length of our sound wave array.
+
+Instructions
+100 XP
+Convert the sound wave bytes to integers.
+Get the frame rate of the good morning audio file using getframerate().
+Set stop to be the length of soundwave_gm over the frame rate.
+Set num to be the length of soundwave_gm.
+
+
+# Read in sound wave and convert from bytes to integers
+good_morning = wave.open('good_morning.wav', 'r')
+signal_gm = good_morning.readframes(-1)
+soundwave_gm = np.frombuffer(signal_gm, dtype='int16')
+
+# Get the sound wave frame rate
+framerate_gm = good_morning.getframerate()
+
+# Find the sound wave timestamps
+time_gm = np.linspace(start=0,
+                      stop=len(soundwave_gm)/framerate_gm,
+                      num=len(soundwave_gm))
+
+# Print the first 10 timestamps
+print(time_gm[:10])
+
+
+Staying consistent
+Why is it important to ensure the same data transformations are performed on all of your audio files?
+
+To ensure data consistency and prevent potential data mismatches.
+
+
+Processing audio data with Python
+You've seen how a sound waves can be turned into numbers but what does all that conversion look like?
+
+And how about another similar sound wave? One slightly different?
+
+In this exercise, we're going to use MatPlotLib to plot the sound wave of good_morning against good_afternoon.
+
+To have the good_morning and good_afternoon sound waves on the same plot and distinguishable from each other, we'll use MatPlotLib's alpha parameter.
+
+You can listen to the good_morning audio here and good_afternoon audio here.
+
+Instructions
+100 XP
+Set the title to reflect the plot we are making.
+Add the good_afternoon time variable (time_ga) and amplitude variable (soundwave_ga) to the plot.
+Do the same with the good_morning time variable (time_gm) and amplitude variable (soundwave_gm) to the plot.
+Set the alpha variable to 0.5.
+
+# Setup the title and axis titles
+plt.title('Good Afternoon vs. Good Morning')
+plt.ylabel('Amplitude')
+plt.xlabel('Time (seconds)')
+
+# Add the Good Afternoon data to the plot
+plt.plot(time_ga, soundwave_ga, label='Good Afternoon')
+
+# Add the Good Morning data to the plot
+plt.plot(time_gm, soundwave_gm, label='Good Morning',
+   # Set the alpha variable to 0.5
+   alpha=0.5)
+
+plt.legend()
+plt.show()
+
+
+
+Pick the wrong speech_recognition API
+Which of the following is not a speech recognition API within the speech_recognition library?
+
+An instance of the Recognizer class has been created and saved to recognizer. You can try calling the API on recognizer to see what happens.
+
+what_does_this_say()
+
+
+
+Using the SpeechRecognition library
+To save typing speech_recognition every time, we'll import it as sr.
+
+We'll also setup an instance of the Recognizer class to use later.
+
+The energy_threshold is a number between 0 and 4000 for how much the Recognizer class should listen to an audio file.
+
+energy_threshold will dynamically adjust whilst the recognizer class listens to audio.
+
+Instructions
+100 XP
+Import the speech_recognition library as sr.
+Setup an instance of the Recognizer class and save it to recognizer.
+Set the recognizer.energy_threshold to 300.
+
+
+# Importing the speech_recognition library
+import speech_recognition as sr
+
+# Create an instance of the Recognizer class
+recognizer = sr.Recognizer()
+
+# Set the energy threshold
+recognizer.energy_threshold = 300
+
+
+Using the Recognizer class
+Now you've created an instance of the Recognizer class we'll use the recognize_google() method on it to access the Google web speech API and turn spoken language into text.
+
+recognize_google() requires an argument audio_data otherwise it will return an error.
+
+US English is the default language. If your audio file isn't in US English, you can change the language with the language argument. A list of language codes can be seen here.
+
+An audio file containing English speech has been imported as clean_support_call_audio. You can listen to the audio file here. SpeechRecognition has also been imported as sr.
+
+To avoid hitting the API request limit of Google's web API, we've mocked the Recognizer class to work with our audio files. This means some functionality will be limited.
+
+Instructions
+100 XP
+Call the recognize_google() method on recognizer and pass it clean_support_call_audio.
+Set the language argument to "en-US".
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Transcribe the support call audio
+text = recognizer.recognize_google(
+  audio_data=clean_support_call_audio, 
+  language= "en-US")
+
+print(text)
+
+
+
+From AudioFile to AudioData
+As you saw earlier, there are some transformation steps we have to take to make our audio data useful. The same goes for SpeechRecognition.
+
+In this exercise, we'll import the clean_support_call.wav audio file and get it ready to be recognized.
+
+We first read our audio file using the AudioFile class. But the recognize_google() method requires an input of type AudioData.
+
+To convert our AudioFile to AudioData, we'll use the Recognizer class's method record() along with a context manager. The record() method takes an AudioFile as input and converts it to AudioData, ready to be used with recognize_google().
+
+SpeechRecognition has already been imported as sr.
+
+Instructions
+100 XP
+Pass the AudioFile class clean_support_call.wav.
+Use the context manager to open and read clean_support_call as source.
+Record source and run the code.
+
+
+# Instantiate Recognizer
+recognizer = sr.Recognizer()
+
+# Convert audio to AudioFile
+clean_support_call = sr.AudioFile('clean_support_call.wav')
+
+# Convert AudioFile to AudioData
+with clean_support_call as source:
+    clean_support_call_audio = recognizer.record(source)
+
+# Transcribe AudioData to text
+text = recognizer.recognize_google(clean_support_call_audio,
+                                   language="en-US")
+print(text)
+
+
+Recording the audio we need
+Sometimes you may not want the entire audio file you're working with. The duration and offset parameters of the record() method can help with this.
+
+After exploring your dataset, you find there's one file, imported as nothing_at_end which has 30-seconds of silence at the end and a support call file, imported as out_of_warranty has 3-seconds of static at the front.
+
+Setting duration and offset means the record() method will record up to duration audio starting at offset. They're both measured in seconds.
+
+Instructions 1/2
+50 XP
+1
+Let's get the first 10-seconds of nothing_at_end_audio. To do this, you can set duration to 10.
+
+# Convert AudioFile to AudioData
+with nothing_at_end as source:
+    nothing_at_end_audio = recognizer.record(source,
+                                             duration=10,
+                                             offset=None)
+
+# Transcribe AudioData to text
+text = recognizer.recognize_google(nothing_at_end_audio,
+                                   language="en-US")
+
+print(text)
+
+
+Let's remove the first 3-seconds of static of static_at_start by setting offset to 3.
+
+# Convert AudioFile to AudioData
+with static_at_start as source:
+    static_art_start_audio = recognizer.record(source,
+                                               duration=None,
+                                               offset=3)
+
+# Transcribe AudioData to text
+text = recognizer.recognize_google(static_art_start_audio,
+                                   language="en-US")
+
+print(text)
+
+
+Different kinds of audio
+Now you've seen an example of how the Recognizer class works. Let's try a few more. How about speech from a different language?
+
+What do you think will happen when we call the recognize_google() function on a Japanese version of good_morning.wav (japanese_audio)?
+
+The default language is "en-US", are the results the same with the "ja" tag?
+
+How about non-speech audio? Like this leopard roaring (leopard_audio).
+
+Or speech where the sounds may not be real words, such as a baby talking (charlie_audio)?
+
+To familiarize more with the Recognizer class, we'll look at an example of each of these.
+
+Instructions 1/4
+25 XP
+1
+Pass the Japanese version of good morning (japanese_audio) to recognize_google() using "en-US" as the language.
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Pass the Japanese audio to recognize_google
+text = recognizer.recognize_google(japanese_audio, language="en-US")
+
+# Print the text
+print(text)
+
+
+Pass the same Japanese audio (japanese_audio) using "ja" as the language parameter. Do you see a difference?
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Pass the Japanese audio to recognize_google
+text = recognizer.recognize_google(japanese_audio, language="ja")
+
+# Print the text
+print(text)
+
+
+What about about non-speech audio? Pass leopard_audio to recognize_google() with show_all as True.
+
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Pass the leopard roar audio to recognize_google
+text = recognizer.recognize_google(leopard_audio, 
+                                   language="en-US", 
+                                   show_all=True)
+
+# Print the text
+print(text)
+
+
+
+What if your speech files have non-audible human sounds? Pass charlie_audio to recognize_google() to find out.
+
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Pass charlie_audio to recognize_google
+text = recognizer.recognize_google(charlie_audio, 
+                                   language="en-US")
+
+# Print the text
+print(text)
+
+
+
+Multiple Speakers 1
+If your goal is to transcribe conversations, there will be more than one speaker. However, as you'll see, the recognize_google() function will only transcribe speech into a single block of text.
+
+You can hear in this audio file there are three different speakers.
+
+But if you transcribe it on its own, recognize_google() returns a single block of text. Which is still useful but it doesn't let you know which speaker said what.
+
+We'll see an alternative to this in the next exercise.
+
+The multiple speakers audio file has been imported and converted to AudioData as multiple_speakers.
+
+Instructions
+100 XP
+Create an instance of Recognizer.
+Recognize the multiple_speakers variable using the recognize_google() function.
+Set the language to US English ("en-US").
+
+
+# Create a recognizer class
+recognizer = sr.Recognizer()
+
+# Recognize the multiple speaker AudioData
+text = recognizer.recognize_google(multiple_speakers, 
+                       			   language="en-US")
+
+# Print the text
+print(text)
+
+
+
+Multiple Speakers 2
+Deciphering between multiple speakers in one audio file is called speaker diarization. However, you've seen the free function we've been using, recognize_google() doesn't have the ability to transcribe different speakers.
+
+One way around this, without using one of the paid speech to text services, is to ensure your audio files are single speaker.
+
+This means if you were working with phone call data, you would make sure the caller and receiver are recorded separately. Then you could transcribe each file individually.
+
+In this exercise, we'll transcribe each of the speakers in our multiple speakers audio file individually.
+
+Instructions
+100 XP
+Pass speakers to the enumerate() function to loop through the different speakers.
+Call record() on recognizer to convert the AudioFiles into AudioData.
+Use recognize_google() to transcribe each of the speaker_audio objects.
+
+recognizer = sr.Recognizer()
+
+# Multiple speakers on different files
+speakers = [sr.AudioFile("speaker_0.wav"), 
+            sr.AudioFile("speaker_1.wav"), 
+            sr.AudioFile("speaker_2.wav")]
+
+# Transcribe each speaker individually
+for i, speaker in enumerate(speakers):
+    with speaker as source:
+        speaker_audio = recognizer.record(source)
+    print(f"Text from speaker {i}:")
+    print(recognizer.recognize_google(speaker_audio,
+         				  language="en-US"))
+                  
+                  
+
+Working with noisy audio
+In this exercise, we'll start by transcribing a clean speech sample to text and then see what happens when we add some background noise.
+
+A clean audio sample has been imported as clean_support_call.
+
+Play clean support call.
+
+We'll then do the same with the noisy audio file saved as noisy_support_call. It has the same speech as clean_support_call but with additional background noise.
+
+Play noisy support call.
+
+To try and negate the background noise, we'll take advantage of Recognizer's adjust_for_ambient_noise() function.
+
+Instructions 1/4
+25 XP
+1
+Let's transcribe some clean audio. Read in clean_support_call as the source and call recognize_google() on the file.
+
+recognizer = sr.Recognizer()
+
+# Record the audio from the clean support call
+with clean_support_call as source:
+  clean_support_call_audio = recognizer.record(source)
+
+# Transcribe the speech from the clean support call
+text = recognizer.recognize_google(clean_support_call_audio,
+                                   language="en-US")
+
+print(text)
+
+
+Let's do the same as before but with a noisy audio file saved as noisy_support_call and show_all parameter as True.
+
+
+
+
+recognizer = sr.Recognizer()
+
+# Record the audio from the noisy support call
+with noisy_support_call as source:
+  noisy_support_call_audio = recognizer.record(source)
+
+# Transcribe the speech from the noisy support call
+text = recognizer.recognize_google(noisy_support_call_audio,
+                         language="en-US",
+                         show_all=True)
+
+print(text)
+
+
+
+Set the duration parameter of adjust_for_ambient_noise() to 1 (second) so recognizer adjusts for background noise.
+
+
+recognizer = sr.Recognizer()
+
+# Record the audio from the noisy support call
+with noisy_support_call as source:
+	# Adjust the recognizer energy threshold for ambient noise
+    recognizer.adjust_for_ambient_noise(source, duration=1)
+    noisy_support_call_audio = recognizer.record(noisy_support_call)
+ 
+# Transcribe the speech from the noisy support call
+text = recognizer.recognize_google(noisy_support_call_audio,
+                                   language="en-US",
+                                   show_all=True)
+
+print(text)
+
+
+A duration of 1 was too long and it cut off some of the audio. Try setting duration to 0.5.
+
+
+
+recognizer = sr.Recognizer()
+
+# Record the audio from the noisy support call
+with noisy_support_call as source:
+	# Adjust the recognizer energy threshold for ambient noise
+    recognizer.adjust_for_ambient_noise(source, duration=0.5)
+    noisy_support_call_audio = recognizer.record(noisy_support_call)
+ 
+# Transcribe the speech from the noisy support call
+text = recognizer.recognize_google(noisy_support_call_audio,
+                                   language="en-US",
+                                   show_all=True)
+
+print(text)
