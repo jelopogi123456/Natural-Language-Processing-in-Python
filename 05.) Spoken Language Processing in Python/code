@@ -508,3 +508,976 @@ text = recognizer.recognize_google(noisy_support_call_audio,
                                    show_all=True)
 
 print(text)
+
+
+
+
+Import an audio file with PyDub
+PyDub's AudioSegment class makes it easy to import and manipulate audio files with Python.
+
+In this exercise, we'll import an audio file of interest by creating an instance of AudioSegment.
+
+To import an audio file, you can use the from_file() function on AudioSegment and pass it your target audio file's pathname as a string. The format parameter gives you an option to specify the format of your audio file, however, this is optional as PyDub will automatically infer it.
+
+PyDub works with .wav files without any extra dependencies but for other file types like .mp3, you'll need to install ffmpeg.
+
+A sample audio file has been setup as wav_file.wav, you can listen to it here.
+
+Instructions
+100 XP
+Import AudioSegment from pydub.
+Call the from_file method and pass it the audio file pathname.
+
+# Import AudioSegment from Pydub
+from pydub import AudioSegment
+
+# Create an AudioSegment instance
+wav_file = AudioSegment.from_file(file='wav_file.wav', 
+                                  format="wav")
+
+# Check the type
+print(type(wav_file))
+
+
+Play an audio file with PyDub
+If you're working with audio files, chances are you want to listen to them.
+
+PyDub's playback module provides a function called play() which can be passed an AudioSegment. Running the play() function with an AudioSegment passed in will play the AudioSegment out loud.
+
+This can be helpful to check the quality of your audio files and assess any changes you need to make.
+
+In this exercise you'll see how simple it is to use the play() function.
+
+Remember: to use the play() function, you'll need simpleaudio or pyaudio installed for .wav files and ffmpeg for other kinds of files.
+
+Instructions
+100 XP
+Import play from the pydub.playback module.
+Call play() whilst passing it the wav_file AudioSegment.
+
+# Import AudioSegment and play
+from pydub import AudioSegment
+from pydub.playback import play
+
+# Create an AudioSegment instance
+wav_file = AudioSegment.from_file(file="wav_file.wav", 
+                                  format="wav")
+
+# Play the audio file
+play(wav_file)
+
+
+Audio parameters with PyDub
+Every audio file you work with will have a number of characteristics associated with them, such as, channels, frame rate (or sample rate), sample width and more.
+
+Knowing these parameters is useful to ensure your audio files are compatible with various API requirements for speech transcription.
+
+For example, many APIs recommend a minimum frame rate (wav_file.frame_rate) of 16,000 Hz.
+
+When you create an instance of AudioSegment, PyDub automatically infers these parameters from your audio files and saves them as attributes.
+
+In this exercise, we'll explore these attributes.
+
+Instructions 1/4
+25 XP
+1
+Find the frame_rate of wav_file.
+
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Find the frame rate
+print(wav_file.frame_rate)
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+
+Find the number of channels of wav_file.
+
+# Find the number of channels
+print(wav_file.channels)
+
+
+
+Find the max amplitude of wav_file.
+
+
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Find the max amplitude
+print(wav_file.max)
+
+
+Find the length of wav_file in milliseconds.
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Find the length
+print(len(wav_file))
+
+
+Adjusting audio parameters
+During your exploratory data analysis, you may find some of the parameters of your audio files differ or are incompatible with speech recognition APIs.
+
+Don't worry, PyDub has built-in functionality which allows you to change various attributes.
+
+For example, you can set the frame rate of your audio file calling set_frame_rate() on your AudioSegment instance and passing it an integer of the desired frame rate measured in Hertz.
+
+In this exercise, we'll practice altering some audio attributes.
+
+Instructions 1/3
+35 XP
+1
+Create a new wav_file with a frame rate of 16,000 Hz and then check its frame rate.
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Create a new wav file with adjusted frame rate
+wav_file_16k = wav_file.set_frame_rate(16000)
+
+# Check the frame rate of the new wav file
+print(wav_file_16k.frame_rate)
+
+
+Set the wav_file number of channels to 1 and then check the number of channels.
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Set number of channels to 1
+wav_file_1_ch = wav_file.set_channels(1)
+
+# Check the number of channels
+print(wav_file_1_ch.channels)
+
+
+Print the sample width of wav_file and then set it to 1 and print it again.
+
+
+# Import audio file
+wav_file = AudioSegment.from_file(file="wav_file.wav")
+
+# Print sample_width
+print(f"Old sample width: {wav_file.sample_width}")
+
+# Set sample_width to 1
+wav_file_sw_1 = wav_file.set_sample_width(1)
+
+# Check new sample_width
+print(f"New sample width: {wav_file_sw_1.sample_width}")
+
+
+
+Turning it down... then up
+Speech recognition works best on clean, audible speech. If your audio files are too quiet or too loud, it can hinder transcription.
+
+In this exercise, you'll see how to make an AudioSegment quieter or louder.
+
+Since the play() function won't play your changes in the DataCamp classroom.
+
+The baseline audio file, volume_adjusted.wav can be heard here.
+
+Instructions 1/2
+50 XP
+1
+Import volume_adjusted.wav and lower its volume by 60 dB and save it to a new variable quiet_volume_adjusted.
+
+
+from pydub import AudioSegment
+
+# Import audio file
+volume_adjusted = AudioSegment.from_file('volume_adjusted.wav')
+
+# Lower the volume by 60 dB
+quiet_volume_adjusted = volume_adjusted -  60
+
+
+Import the target audio file, increase its volume by 15 dB and save it to the variable louder_volume_adjusted.
+
+
+from pydub import AudioSegment
+
+# Import audio file
+volume_adjusted = AudioSegment.from_file('volume_adjusted.wav')
+
+# Increase the volume by 15 dB
+louder_volume_adjusted = volume_adjusted + 15
+
+
+Normalizing an audio file with PyDub
+Sometimes you'll have audio files where the speech is loud in some portions and quiet in others. Having this variance in volume can hinder transcription.
+
+Luckily, PyDub's effects module has a function called normalize() which finds the maximum volume of an AudioSegment, then adjusts the rest of the AudioSegment to be in proportion. This means the quiet parts will get a volume boost.
+
+You can listen to an example of an audio file which starts as loud then goes quiet, loud_then_quiet.wav, here.
+
+In this exercise, you'll use normalize() to normalize the volume of our file, making it sound more like this.
+
+Instructions
+100 XP
+Import AudioSegment from PyDub and normalize from the PyDub's effects module.
+Import the target audio file, loud_then_quiet.wav and save it to loud_then_quiet.
+Normalize the imported audio file using the normalize() function and save it to normalized_loud_then_quiet.
+
+# Import AudioSegment and normalize
+from pydub import AudioSegment
+from pydub.effects import normalize
+
+# Import target audio file
+loud_then_quiet = AudioSegment.from_file('loud_then_quiet.wav')
+
+# Normalize target audio file
+normalized_loud_then_quiet = normalize(loud_then_quiet)
+
+
+Chopping and changing audio files
+Some of your audio files may have sections of redundancy. For example, you might find at the beginning of each file, there's a few seconds of static.
+
+Instead of wasting compute trying to transcribe static, you can remove it.
+
+Since an AudioSegment is iterable, and measured in milliseconds, you can use slicing to alter the length.
+
+To get the first 3-seconds of wav_file, you'd use wav_file[:3000].
+
+You can also add two AudioSegment's together using the addition operator. This is helpful if you need to combine several audio files.
+
+To practice both of these, we're going to remove the first four seconds of part1.wav, and add the remainder to part2.wav. Leaving the end result sounding like part_3.wav.
+
+Instructions
+100 XP
+Import part_1.wav and part_2.wav and save them to part_1 and part_2 respectively.
+Remove the first 4-seconds of part_1 using slicing and save the new audio to part_1_removed.
+Add part_1_removed to part_2 and save it to part_3.
+
+
+
+from pydub import AudioSegment
+
+# Import part 1 and part 2 audio files
+part_1 = AudioSegment.from_file('part_1.wav')
+part_2 = AudioSegment.from_file('part_2.wav')
+
+# Remove the first four seconds of part 1
+part_1_removed = part_1[4000:]
+
+# Add the remainder of part 1 and part 2 together
+part_3 = part_1_removed + part_2
+
+
+Splitting stereo audio to mono with PyDub
+If you're trying to transcribe phone calls, there's a chance they've been recorded in stereo format, with one speaker on each channel.
+
+As you've seen, it's hard to transcribe an audio file with more than one speaker. One solution is to split the audio file with multiple speakers into single files with individual speakers.
+
+PyDub's split_to_mono() function can help with this. When called on an AudioSegment recorded in stereo, it returns a list of two separate AudioSegment's in mono format, one for each channel.
+
+In this exercise, you'll practice this by splitting this stereo phone call (stereo_phone_call.wav) recording into channel 1 and channel 2. This separates the two speakers, allowing for easier transcription.
+
+Instructions
+100 XP
+Import AudioSegment from pydub.
+Create an AudioSegment instance stereo_phone_call with stereo_phone_call.wav.
+Split stereo_phone_call into channels using split_to_mono() and check the channels of the resulting output.
+Save each channel to new variables, phone_call_channel_1 and phone_call_channel_2.
+
+# Import AudioSegment
+from pydub import AudioSegment
+
+# Import stereo audio file and check channels
+stereo_phone_call = AudioSegment.from_file('stereo_phone_call.wav')
+print(f"Stereo number channels: {stereo_phone_call.channels}")
+
+# Split stereo phone call and check channels
+channels = stereo_phone_call.split_to_mono()
+print(f"Split number channels: {channels[0].channels}, {channels[1].channels}")
+
+# Save new channels separately
+phone_call_channel_1 = channels[0]
+phone_call_channel_2 = channels[1]
+
+
+Exporting and reformatting audio files
+If you've made some changes to your audio files, or if they've got the wrong file extension, you can use PyDub to export and save them as new audio files.
+
+You can do this by using the .export() function on any instance of an AudioSegment you've created. The export() function takes two parameters, out_f, or the destination file path of your audio file and format, the format you'd like your new audio file to be. Both of these are strings. format is "mp3" by default so be sure to change it if you need.
+
+In this exercise, you'll import this .mp3 file (mp3_file.mp3) and then export it with the .wav extension using .export().
+
+Remember, to work with files other than .wav, you'll need ffmpeg.
+
+Instructions
+100 XP
+Import mp3_file.mp3 and save it to mp3_file.
+Export mp3_file with the file name mp3_file.wav with "wav" format.
+
+from pydub import AudioSegment
+
+# Import the .mp3 file
+mp3_file = AudioSegment.from_file('mp3_file.mp3')
+
+# Export the .mp3 file as wav
+mp3_file.export(out_f='mp3_file.wav',
+                format='wav')
+	
+	
+	
+Manipulating multiple audio files with PyDub
+You've seen how to convert a single file using PyDub but what if you had a folder with multiple different file types?
+
+For this exercise, we've setup a folder which has .mp3, .m4a and .aac versions of the good-afternoon audio file.
+
+We'll use PyDub to open each of the files and export them as .wav format so they're compatible with speech recognition APIs.
+
+Instructions
+100 XP
+Pass audio_file to the from_file() function.
+Use export() to export wav_filename with the format ".wav".
+
+
+# Loop through the files in the folder
+for audio_file in folder:
+    
+	# Create the new .wav filename
+    wav_filename = os.path.splitext(os.path.basename(audio_file))[0] + ".wav"
+        
+    # Read audio_file and export it in wav format
+    AudioSegment.from_file(audio_file).export(out_f=wav_filename, 
+                                      format='wav')
+        
+    print(f"Creating {wav_filename}...")
+    
+    
+    
+  
+An audio processing workflow
+You've seen how to import and manipulate a single audio file using PyDub. But what if you had a folder with multiple audio files you needed to convert?
+
+In this exercise we'll use PyDub to format a folder of files to be ready to use with speech_recognition.
+
+You've found your customer call files all have 3-seconds of static at the start and are quieter than they could be.
+
+To fix this, we'll use PyDub to cut the static, increase the sound level and convert them to the .wav extension.
+
+You can listen to an unformatted example here.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Let's start with one file. Import account_help.mp3 and cut off the first 3-seconds (3000 milliseconds) of static.
+
+file_with_static = AudioSegment.from_file('account_help.mp3')
+
+# Cut the first 3-seconds of static off
+file_without_static = file_with_static[3000:]
+
+
+
+
+Now the static has been removed, increase the volume by 10dB.
+
+
+file_with_static = AudioSegment.from_file("account_help.mp3")
+
+# Cut the 3-seconds of static off
+file_without_static = file_with_static[3000:]
+
+# Increase the volume by 10dB
+louder_file_without_static = file_without_static + 10
+
+Now for multiple files. Use from_file() to import each audio_file and export the louder files without static with the "wav" format.
+
+
+for audio_file in folder:
+    file_with_static = AudioSegment.from_file(audio_file)
+
+    # Cut the 3-seconds of static off
+    file_without_static = file_with_static[3000:]
+
+    # Increase the volume by 10dB
+    louder_file_without_static = file_without_static + 10
+    
+    # Create the .wav filename for export
+    wav_filename = os.path.splitext(os.path.basename(audio_file))[0] + ".wav"
+    
+    # Export the louder file without static as .wav
+    louder_file_without_static.export(wav_filename, format='wav')
+    print(f"Creating {wav_filename}...")
+    
+    
+  Converting audio to the right format
+Acme Studios have asked you to do a proof of concept to find out more about their audio files.
+
+After exploring them briefly, you find there's a few calls but they're in the wrong file format for transcription.
+
+As you'll be interacting with many audio files, you decide to begin by creating some helper functions.
+
+The first one, convert_to_wav(filename) takes a file path and uses PyDub to convert it from a non-wav format to .wav format.
+
+Once it's built, we'll use the function to convert Acme's first call, call_1.mp3, from .mp3 format to .wav.
+
+PyDub's AudioSegment class has already been imported. Remember, to work with non-wav files, you'll need ffmpeg.
+
+Instructions
+100 XP
+Import the filename parameter using AudioSegment's from_file().
+Set the export format to "wav".
+Pass the target audio file, call_1.mp3, to the function.
+
+
+
+# Create function to convert audio file to wav
+def convert_to_wav(filename):
+  """Takes an audio file of non .wav format and converts to .wav"""
+  # Import audio file
+  audio = AudioSegment.from_file(filename)
+  
+  # Create new filename
+  new_filename = filename.split(".")[0] + ".wav"
+  
+  # Export file as .wav
+  audio.export(new_filename, format='wav')
+  print(f"Converting {filename} to {new_filename}...")
+ 
+# Test the function
+convert_to_wav('call_1.mp3')
+
+
+Finding PyDub stats
+You decide it'll be helpful to know the audio attributes of any given file easily. This will be especially helpful for finding out how many channels an audio file has or if the frame rate is adequate for transcription.
+
+In this exercise, we'll create show_pydub_stats() which takes a filename of an audio file as input. It then imports the audio as a PyDub AudioSegment instance and prints attributes such as number of channels, length and more.
+
+It then returns the AudioSegment instance so it can be used later on.
+
+We'll use our function on the newly converted .wav file, call_1.wav
+
+AudioSegment has already imported from PyDub.
+
+Instructions
+100 XP
+Create an AudioSegment instance called audio_segment by importing the filename parameter.
+Print the number of channels using the channels attribute.
+Return the audio_segment variable.
+Test the function on "call_1.wav".
+
+
+
+def show_pydub_stats(filename):
+  """Returns different audio attributes related to an audio file."""
+  # Create AudioSegment instance
+  audio_segment = AudioSegment.from_file(filename)
+  
+  # Print audio attributes and return AudioSegment instance
+  print(f"Channels: {audio_segment.channels}")
+  print(f"Sample width: {audio_segment.sample_width}")
+  print(f"Frame rate (sample rate): {audio_segment.frame_rate}")
+  print(f"Frame width: {audio_segment.frame_width}")
+  print(f"Length (ms): {len(audio_segment)}")
+  return audio_segment
+
+# Try the function
+call_1_audio_segment = show_pydub_stats("call_1.wav")
+
+
+Transcribing audio with one line
+Alright, now you've got functions to convert audio files and find out their attributes, it's time to build one to transcribe them.
+
+In this exercise, you'll build transcribe_audio() which takes a filename as input, imports the filename using speech_recognition's AudioFile class and then transcribes it using recognize_google().
+
+You've seen these functions before but now we'll put them together so they're accessible in a function.
+
+To test it out, we'll transcribe Acme's first call, "call_1.wav".
+
+speech_recognition has been imported as sr.
+
+Instructions
+100 XP
+Define a function called transcribe_audio which takes filename as an input parameter.
+Setup a Recognizer() instance as recognizer.
+Use recognize_google() to transcribe the audio data.
+Pass the target call to the function.
+
+
+def transcribe_audio(filename):
+  """Takes a .wav format audio file and transcribes it to text."""
+  # Setup a recognizer instance
+  recognizer = sr.Recognizer()
+  
+  # Import the audio file and convert to audio data
+  audio_file = sr.AudioFile(filename)
+  with audio_file as source:
+    audio_data = recognizer.record(source)
+  
+  # Return the transcribed text
+  return recognizer.recognize_google(audio_data)
+
+# Test the function
+print(transcribe_audio("call_1.wav"))
+
+
+Using the helper functions you've built
+Okay, now we've got some helper functions ready to go, it's time to put them to use!
+
+You'll first use convert_to_wav() to convert Acme's call_1.mp3 to .wav format and save it as call_1.wav
+
+Using show_pydub_stats() you find call_1.wav has 2 channels so you decide to split them using PyDub's split_to_mono(). Acme tells you the customer channel is likely channel 2. So you export channel 2 using PyDub's .export().
+
+Finally, you'll use transcribe_audio() to transcribe channel 2 only.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Convert the .mp3 version of call_1 to .wav and then check the stats of the .wav version.
+
+
+
+
+# Convert mp3 file to wav
+convert_to_wav('call_1.mp3')
+
+# Check the stats of new file
+call_1 = show_pydub_stats('call_1.mp3')
+
+
+
+Split call_1 to mono and then export the second channel in .wav format.
+
+# Convert mp3 file to wav
+convert_to_wav("call_1.mp3")
+
+# Check the stats of new file
+call_1 = show_pydub_stats("call_1.wav")
+
+# Split call_1 to mono
+call_1_split = call_1.split_to_mono()
+
+# Export channel 2 (the customer channel)
+call_1_split[1].export("call_1_channel_2.wav",
+                       format='wav')
+		       
+		       
+		       
+Transcribe the audio of call 1's channel 2.
+
+
+# Convert mp3 file to wav
+convert_to_wav("call_1.mp3")
+
+# Check the stats of new file
+call_1 = show_pydub_stats("call_1.wav")
+
+# Split call_1 to mono
+call_1_split = call_1.split_to_mono()
+
+# Export channel 2 (the customer channel)
+call_1_split[1].export("call_1_channel_2.wav",
+                       format="wav")
+
+# Transcribe the single channel
+print(transcribe_audio([1]))
+
+
+Analyzing sentiment of a phone call
+Once you've transcribed the text from an audio file, it's possible to perform natural language processing on the text.
+
+In this exercise, we'll use NLTK's VADER (Valence Aware Dictionary and sEntiment Reasoner) to analyze the sentiment of the transcribed text of call_2.wav.
+
+To transcribe the text, we'll use the transcribe_audio() function we created earlier.
+
+Once we have the text, we'll use NLTK's SentimentIntensityAnalyzer() class to obtain a sentiment polarity score.
+
+.polarity_scores(text) returns a value for pos (positive), neu (neutral), neg (negative) and compound. Compound is a mixture of the other three values. The higher it is, the more positive the text. Lower means more negative.
+
+Instructions
+100 XP
+Instantiate an instance of SentimentIntensityAnalyzer() and save it to the variable sid.
+Transcribe the target call and save it to call_2_text.
+Print the polarity_scores() of call_2_text.
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Create SentimentIntensityAnalyzer instance
+sid = SentimentIntensityAnalyzer()
+
+# Let's try it on one of our phone calls
+call_2_text = transcribe_audio("call_2.wav")
+
+# Display text and sentiment polarity scores
+print(call_2_text)
+print(sid.polarity_scores(call_2_text))
+
+
+
+Exercise
+Exercise
+Sentiment analysis on formatted text
+In this exercise, you'll calculate the sentiment on the customer channel of call_2.wav.
+
+You've split the customer channel and saved it to call_2_channel_2.wav.
+
+But from your experience with sentiment analysis, you know it can change sentence to sentence.
+
+To calculate it sentence to sentence, you split the split using NLTK's sent_tokenize() module.
+
+But transcribe_audio() doesn't return sentences. To try sentiment anaylsis with sentences, you've tried a paid API service to get call_2_channel_2_paid_api_text which has sentences.
+
+Instructions 1/3
+35 XP
+1
+Transcribe the audio of call_2_channel_2.wav and find the sentiment scores.
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Create SentimentIntensityAnalyzer instance
+sid = SentimentIntensityAnalyzer()
+
+# Transcribe customer channel of call 2
+call_2_channel_2_text = transcribe_audio('call_2_channel_2.wav')
+
+# Display text and sentiment polarity scores
+print(call_2_channel_2_text)
+print(sid.polarity_scores(call_2_channel_2_text))
+
+
+Split call_2_channel_2_text into sentences and find the sentiment score of each sentence.
+
+# Import sent_tokenize from nltk
+from nltk import sent_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Create SentimentIntensityAnalyzer instance
+sid = SentimentIntensityAnalyzer()
+
+# Split call 2 channel 2 into sentences and score each
+for sentence in sent_tokenize(call_2_channel_2_text):
+    print(sentence)
+    print(sid.polarity_scores(sentence))
+    
+    
+    Split call_2_channel_2_paid_api_text into sentences and score the sentiment of each.
+
+# Import sent_tokenize from nltk
+from nltk import sent_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Create SentimentIntensityAnalyzer instance
+sid = SentimentIntensityAnalyzer()
+
+# Split channel 2 paid text into sentences and score each
+for sentence in sent_tokenize(call_2_channel_2_paid_api_text):
+    print(sentence)
+    print(sid.polarity_scores(sentence))
+    
+    
+    Named entity recognition in spaCy
+Named entities are real-world objects which have names, such as, cities, people, dates or times. We can use spaCy to find named entities in our transcribed text.
+
+In this exercise, you'll transcribe call_4_channel_2.wav using transcribe_audio() and then use spaCy's language model, en_core_web_sm to convert the transcribed text to a spaCy doc.
+
+Transforming text to a spaCy doc allows us to leverage spaCy's built-in features for analyzing text, such as, .text for tokens (single words), .sents for sentences and .ents for named entities.
+
+Instructions 1/4
+25 XP
+1
+Create a spaCy doc by passing the transcribed call 4 channel 2 text to nlp() and then check its type.
+
+import spacy
+
+# Transcribe call 4 channel 2
+call_4_channel_2_text = transcribe_audio("call_4_channel_2.wav")
+
+# Create a spaCy language model instance
+nlp = spacy.load("en_core_web_sm")
+
+# Create a spaCy doc with call 4 channel 2 text
+doc = nlp(call_4_channel_2_text)
+
+# Check the type
+print(type(doc))
+
+
+
+Create a spaCy doc with call_4_channel_2_text then print all the token text in it using the .text attribute.
+
+import spacy
+
+# Load the spaCy language model
+nlp = spacy.load("en_core_web_sm")
+
+# Create a spaCy doc with call 4 channel 2 text
+doc = spacy(call_4_channel_2_text)
+
+# Show tokens in doc
+for token in doc:
+    print(token.text, token.idx)
+    
+    
+    
+    
+    Create a spaCy doc with call_4_channel_2_text then print all the token text in it using the .text attribute.
+
+
+
+
+
+import spacy
+
+# Load the spaCy language model
+nlp = spacy.load("en_core_web_sm")
+
+# Create a spaCy doc with call 4 channel 2 text
+doc = nlp(call_4_channel_2_text)
+
+# Show tokens in doc
+for token in doc:
+    print(token.text, token.idx)
+    
+    
+    
+    Load the "en_core_web_sm" language model and then print the sentences in the doc using the .sents attribute.
+
+
+
+import spacy
+
+# Load the spaCy language model
+nlp = spacy.load("en_core_web_sm")
+
+# Create a spaCy doc with call 4 channel 2 text
+doc = nlp(call_4_channel_2_text)
+
+# Show sentences in doc
+for sentence in doc.sents:
+    print(sentence)
+    
+ 
+ Access the entities in the doc using .ents and then print the text of each.
+
+
+import spacy
+
+# Load the spaCy language model
+nlp = spacy.load("en_core_web_sm")
+
+# Create a spaCy doc with call 4 channel 2 text
+doc = nlp(call_4_channel_2_text)
+
+# Show named entities and their labels
+for entity in doc.ents:
+    print(entity.text, entity.label_)
+    
+    
+    
+    
+    Creating a custom named entity in spaCy
+If spaCy's built-in named entities aren't enough, you can make your own using spaCy's EntityRuler() class.
+
+EntityRuler() allows you to create your own entities to add to a spaCy pipeline.
+
+You start by creating an instance of EntityRuler() and passing it the current pipeline, nlp.
+
+You can then call add_patterns() on the instance and pass it a dictionary of the text pattern you'd like to label with an entity.
+
+Once you've setup a pattern you can add it the nlp pipeline using add_pipe().
+
+Since Acme is a technology company, you decide to tag the pattern "smartphone" with the "PRODUCT" entity tag.
+
+spaCy has been imported and a doc already exists containing the transcribed text from call_4_channel_2.wav.
+
+Instructions
+100 XP
+Import EntityRuler from spacy.pipeline.
+Add "smartphone" as the value for the "pattern" key.
+Add the EntityRuler() instance, ruler, to the nlp pipeline.
+Print the entity attributes contained in doc.
+
+# Import EntityRuler class
+from spacy.pipeline import EntityRuler
+
+# Create EntityRuler instance
+ruler = EntityRuler(nlp)
+
+# Define pattern for new entity
+ruler.add_patterns([{"label": "PRODUCT", "pattern": 'smartphone'}])
+
+# Update existing pipeline
+nlp.add_pipe(ruler, before="ner")
+
+# Test new entity
+for entity in doc.ents:
+  print(entity.text, entity.label_)
+  
+  
+  Preparing audio files for text classification
+Acme are very impressed with your work so far. So they've sent over two more folders of audio files.
+
+One folder is called pre_purchase and contains audio snippets from customers who are pre-purchase, like pre_purchase_audio_25.mp3.
+
+And the other is called post_purchase and contains audio snippets from customers who have made a purchase (post-purchase), like post_purchase_audio_27.mp3.
+
+Upon inspecting the files you find there's about 50 in each and they're in the .mp3 format.
+
+Acme want to know if you can build a classifier to classify future calls. You tell them you sure can.
+
+So in this exercise, you'll go through each folder and convert the audio files to .wav format using convert_to_wav() so you can transcribe them.
+
+Instructions
+100 XP
+Convert the files in pre_purchase to .wav using convert_to_wav().
+Convert the files in post_purchase to .wav using convert_to_wav().
+
+# Convert post purchase
+for file in post_purchase:
+    print(f"Converting {file} to .wav...")
+    convert_to_wav(file)
+
+# Convert pre purchase
+for file in pre_purchase:
+    print(f"Converting {file} to .wav...")
+    convert_to_wav(file)
+    
+    
+ Transcribing phone call excerpts
+In this exercise, we'll transcribe the audio files we converted to .wav format to text using transcribe_audio().
+
+Since there's lots of them and there could be more, we'll build a function create_test_list() which takes a list of filenames of audio files as input and goes through each file transcribing the text.
+
+create_test_list() uses our transcribe_audio() function we created earlier and returns a list of strings containing the transcribed text from each audio file.
+
+pre_purchase_wav_files and post_purchase_wav_files are lists of audio snippet filenames.
+
+Instructions 1/2
+50 XP
+1
+2
+Use transcribe_audio() to transcribe the current file to text and add it to the text list.
+Return the text list.
+
+
+def create_text_list(folder):
+  # Create empty list
+  text_list = []
+  
+  # Go through each file
+  for file in folder:
+    # Make sure the file is .wav
+    if file.endswith(".wav"):
+      print(f"Transcribing file: {file}...")
+      
+      # Transcribe audio and append text to list
+      text_list.append(transcribe_audio(file))
+  return text_list
+
+create_text_list(folder)
+
+
+Use create_text_list() to transcribe all post and pre purchase audio snippets.
+Check the first transcription of the post purchase text list.
+
+# Transcribe post and pre purchase text
+post_purchase_text = create_text_list(post_purchase_wav_files)
+pre_purchase_text = create_text_list(pre_purchase_wav_files)
+
+# Inspect the first transcription of post purchase
+print(post_purchase_text[0])
+
+
+
+
+
+
+Organizing transcribed phone call data
+We're almost ready to build a text classifier. But right now, all of our transcribed text data is in two lists, pre_purchase_text and post_purchase_text.
+
+To organize it better for building a text classifier as well as for future use, we'll put it together into a pandas DataFrame.
+
+To start we'll import pandas as pd then we'll create a post purchase dataframe, post_purchase_df using pd.DataFrame().
+
+We'll pass pd.DataFrame() a dictionary containing a "label" key with a value of "post_purchase" and a "text" key with a value of our post_purchase_text list.
+
+We'll do the same for pre_purchase_df except with pre_purchase_text.
+
+To have all the data in one place, we'll use pd.concat() and pass it the pre and post purchase DataFrames.
+
+Instructions
+100 XP
+Create post_purchase_df using the post_purchase_text list.
+Create pre_purchase_df using the pre_purchase_text list.
+Combine the two DataFrames using pd.concat().
+
+
+
+import pandas as pd
+
+# Make dataframes with the text
+post_purchase_df = pd.DataFrame({"label": "post_purchase",
+                                 "text": post_purchase_text})
+pre_purchase_df = pd.DataFrame({"label": "pre_purchase",
+                                "text": pre_purchase_text})
+
+# Combine DataFrames
+df = pd.concat([post_purchase_df, pre_purchase_df])
+
+# Print the combined DataFrame
+print(df.head())
+
+
+Create a spoken language text classifier
+Now you've transcribed some customer call audio data, we'll build a model to classify whether the text from the customer call is pre_purchase or post_purchase.
+
+We've got 45 examples of pre_purchase calls and 57 examples of post_purchase calls.
+
+The data the model will train on is stored in train_df and the data the model will predict on is stored in test_df.
+
+Try printing the .head() of each of these to the console.
+
+We'll build an sklearn pipeline using CountVectorizer() and TfidfTransformer() to convert our text samples to numbers and then use a MultinomialNB() classifier to learn what category each sample belongs to.
+
+This model will work well on our small example here but for larger amounts of text, you may want to consider something more sophisticated.
+
+Instructions 1/2
+50 XP
+1
+2
+Create text_classifier using CountVectorizer(), TfidfTransformer(), and MultinomialNB().
+Fit text_classifier on train_df.text and train_df.label
+
+
+# Build the text_classifier as an sklearn pipeline
+text_classifier = Pipeline([
+    ('vectorizer', CountVectorizer()),
+    ('tfidf', TfidfTransformer()),
+    ('classifier', MultinomialNB()),
+])
+
+# Fit the classifier pipeline on the training data
+text_classifier.fit(train_df.text, train_df.label)
+
+
+Create predicted by calling predict() on text_classifier and passing it the text column of test_df.
+Evaluate the model by seeing how predicted compares to the test_df.label.
+
+# Build the text_classifier as an sklearn pipeline
+text_classifier = Pipeline([
+    ('vectorizer', CountVectorizer()),
+    ('tfidf', TfidfTransformer()),
+    ('classifier', MultinomialNB()),
+])
+
+# Fit the classifier pipeline on the training data
+text_classifier.fit(train_df.text, train_df.label)
+
+# Evaluate the MultinomialNB model
+predicted = text_classifier.predict(test_df.text)
+accuracy = 100 * np.mean(predicted == test_df.label)
+print(f'The model is {accuracy}% accurate')
