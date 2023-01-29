@@ -1,0 +1,928 @@
+Data format for ML algorithms
+In this exercise, you have been given four dataframes df1, df2, df3 and df4. The final column of each dataframe is the predictor variable and the rest of the columns are training features.
+
+Using the console, determine which dataframe is in a suitable format to be trained by a classifier.
+
+
+df3
+
+
+
+One-hot encoding
+In the previous exercise, we encountered a dataframe df1 which contained categorical features and therefore, was unsuitable for applying ML algorithms to.
+
+In this exercise, your task is to convert df1 into a format that is suitable for machine learning.
+
+Use the columns attribute to print the features of df1.
+
+
+
+# Print the features of df1
+print(df1.columns)
+
+
+Use the pd.get_dummies() function to perform one-hot encoding on feature 5 of df1.
+
+
+# Print the features of df1
+print(df1.columns)
+
+# Perform one-hot encoding
+df1 = pd.get_dummies(df1, columns=['feature 5'])
+
+Use the columns attribute again to print the new features of df1.
+Print the first five rows of df1 using head().
+
+# Print the features of df1
+print(df1.columns)
+
+# Perform one-hot encoding
+df1 = pd.get_dummies(df1, columns=['feature 5'])
+
+# Print the new features of df1
+print(df1.columns)
+
+# Print first five rows of df1
+print(df1.head())
+
+
+Character count of Russian tweets
+In this exercise, you have been given a dataframe tweets which contains some tweets associated with Russia's Internet Research Agency and compiled by FiveThirtyEight.
+
+Your task is to create a new feature 'char_count' in tweets which computes the number of characters for each tweet. Also, compute the average length of each tweet. The tweets are available in the content feature of tweets.
+
+Be aware that this is real data from Twitter and as such there is always a risk that it may contain profanity or other offensive content (in this exercise, and any following exercises that also use real Twitter data).
+
+Instructions
+100 XP
+Create a new feature char_count by applying len to the 'content' feature of tweets.
+Print the average character count of the tweets by computing the mean of the 'char_count' feature.
+
+# Create a feature char_count
+tweets['char_count'] = tweets['content'].apply(len)
+
+# Print the average character count
+print(tweets['char_count'].mean())
+
+
+Word count of TED talks
+ted is a dataframe that contains the transcripts of 500 TED talks. Your job is to compute a new feature word_count which contains the approximate number of words for each talk. Consequently, you also need to compute the average word count of the talks. The transcripts are available as the transcript feature in ted.
+
+In order to complete this task, you will need to define a function count_words that takes in a string as an argument and returns the number of words in the string. You will then need to apply this function to the transcript feature of ted to create the new feature word_count and compute its mean.
+
+Instructions
+100 XP
+Split string into a list of words using the split() method.
+Return the number of elements in words using len().
+Apply your function to the transcript column of ted to create the new feature word_count.
+Compute the average word count of the talks using mean().
+
+# Function that returns number of words in a string
+def count_words(string):
+	# Split the string into words
+    words = string.split()
+    
+    # Return the number of words
+    return len(words)
+
+# Create a new feature word_count
+ted['word_count'] = ted['transcript'].apply(count_words)
+
+# Print the average word count of the talks
+print(ted['word_count'].mean())
+
+Hashtags and mentions in Russian tweets
+Let's revisit the tweets dataframe containing the Russian tweets. In this exercise, you will compute the number of hashtags and mentions in each tweet by defining two functions count_hashtags() and count_mentions() respectively and applying them to the content feature of tweets.
+
+In case you don't recall, the tweets are contained in the content feature of tweets.
+
+Instructions 1/2
+35 XP
+1
+In the list comprehension, use startswith() to check if a particular word starts with '#'.
+
+# Function that returns numner of hashtags in a string
+def count_hashtags(string):
+	# Split the string into words
+    words = string.split()
+    
+    # Create a list of words that are hashtags
+    hashtags = [word for word in words if word.startswith('#')]
+    
+    # Return number of hashtags
+    return(len(hashtags))
+
+# Create a feature hashtag_count and display distribution
+tweets['hashtag_count'] = tweets['content'].apply(count_hashtags)
+tweets['hashtag_count'].hist()
+plt.title('Hashtag count distribution')
+plt.show()
+
+
+In the list comprehension, use startswith() to check if a particular word starts with '@'.
+
+
+# Function that returns number of mentions in a string
+def count_mentions(string):
+	# Split the string into words
+    words = string.split()
+    
+    # Create a list of words that are mentions
+    mentions = [word for word in words if word.startswith('@')]
+    
+    # Return number of mentions
+    return(len(mentions))
+
+# Create a feature mention_count and display distribution
+tweets['mention_count'] = tweets['content'].apply(count_mentions)
+tweets['mention_count'].hist()
+plt.title('Mention count distribution')
+plt.show()
+
+
+Readability of 'The Myth of Sisyphus'
+In this exercise, you will compute the Flesch reading ease score for Albert Camus' famous essay The Myth of Sisyphus. We will then interpret the value of this score as explained in the video and try to determine the reading level of the essay.
+
+The entire essay is in the form of a string and is available as sisyphus_essay.
+
+Instructions
+100 XP
+Import the Textatistic class from textatistic.
+Compute the readability_scores dictionary for sisyphus_essay using Textatistic.
+Print the Flesch reading ease score from the readability_scores dictionary.
+
+
+# Import Textatistic
+from textatistic import Textatistic
+
+# Compute the readability scores 
+readability_scores = Textatistic(sisyphus_essay).scores
+
+# Print the flesch reading ease score
+flesch = readability_scores['flesch_score']
+print("The Flesch Reading Ease is %.2f" % (flesch))
+
+
+Readability of various publications
+In this exercise, you have been given excerpts of articles from four publications. Your task is to compute the readability of these excerpts using the Gunning fog index and consequently, determine the relative difficulty of reading these publications.
+
+The excerpts are available as the following strings:
+
+forbes- An excerpt from an article from Forbes magazine on the Chinese social credit score system.
+harvard_law- An excerpt from a book review published in Harvard Law Review.
+r_digest- An excerpt from a Reader's Digest article on flight turbulence.
+time_kids - An excerpt from an article on the ill effects of salt consumption published in TIME for Kids.
+Instructions
+100 XP
+Import the Textatistic class from textatistic.
+Compute the readability_scores dictionary for each excerpt using Textatistic.
+Select the Gunning fog index from the readability_scores dictionary for each excerpt and append it to gunning_fog_scores.
+Print the list of Gunning fog indices.
+
+
+# Import Textatistic
+from textatistic import Textatistic
+
+# List of excerpts
+excerpts = [forbes, harvard_law, r_digest, time_kids]
+
+# Loop through excerpts and compute gunning fog index
+gunning_fog_scores = []
+for excerpt in excerpts:
+  readability_scores = Textatistic(excerpt).scores
+  gunning_fog = readability_scores['gunningfog_score']
+  gunning_fog_scores.append(gunning_fog)
+
+# Print the gunning fog indices
+print(gunning_fog_scores)
+
+
+Identifying lemmas
+Identify the list of words from the choices which do not have the same lemma.
+
+Car, Bike, Truck, Bus
+
+
+
+Tokenizing the Gettysburg Address
+In this exercise, you will be tokenizing one of the most famous speeches of all time: the Gettysburg Address delivered by American President Abraham Lincoln during the American Civil War.
+
+The entire speech is available as a string named gettysburg.
+
+Instructions
+100 XP
+Load the en_core_web_sm model using spacy.load().
+Create a Doc object doc for the gettysburg string.
+Using list comprehension, loop over doc to generate the token texts.
+
+import spacy
+
+# Load the en_core_web_sm model
+nlp = spacy.load('en_core_web_sm')
+
+# Create a Doc object
+doc = nlp(gettysburg)
+
+# Generate the tokens
+tokens = [token.text for token in doc]
+print(tokens)
+
+Lemmatizing the Gettysburg address
+In this exercise, we will perform lemmatization on the same gettysburg address from before.
+
+However, this time, we will also take a look at the speech, before and after lemmatization, and try to adjudge the kind of changes that take place to make the piece more machine friendly.
+
+Instructions 1/3
+35 XP
+1
+2
+3
+Print the gettysburg address to the console.
+
+# Print the gettysburg address
+print(gettysburg)
+
+
+Loop over doc and extract the lemma for each token of gettysburg.
+
+
+import spacy
+
+# Load the en_core_web_sm model
+nlp = spacy.load('en_core_web_sm')
+
+# Create a Doc object
+doc = nlp(gettysburg)
+
+# Generate lemmas
+lemmas = [token.lemma_ for token in doc]
+
+Convert lemmas into a string using join.
+
+
+import spacy
+
+# Load the en_core_web_sm model
+nlp = spacy.load('en_core_web_sm')
+
+# Create a Doc object
+doc = nlp(gettysburg)
+
+# Generate lemmas
+lemmas = [token.lemma_ for token in doc]
+
+# Convert lemmas into a string
+print(' '.join(lemmas))
+
+
+Cleaning a blog post
+In this exercise, you have been given an excerpt from a blog post. Your task is to clean this text into a more machine friendly format. This will involve converting to lowercase, lemmatization and removing stopwords, punctuations and non-alphabetic characters.
+
+The excerpt is available as a string blog and has been printed to the console. The list of stopwords are available as stopwords.
+
+Instructions
+100 XP
+Using list comprehension, loop through doc to extract the lemma_ of each token.
+Remove stopwords and non-alphabetic tokens using stopwords and isalpha().
+
+# Load model and create Doc object
+nlp = spacy.load('en_core_web_sm')
+doc = nlp(blog)
+
+# Generate lemmatized tokens
+lemmas = [token.lemma_ for token in doc]
+
+# Remove stopwords and non-alphabetic tokens
+a_lemmas = [lemma for lemma in lemmas 
+            if lemma.isalpha() and lemma not in stopwords]
+
+# Print string after text cleaning
+print(' '.join(a_lemmas))
+
+Cleaning TED talks in a dataframe
+In this exercise, we will revisit the TED Talks from the first chapter. You have been a given a dataframe ted consisting of 5 TED Talks. Your task is to clean these talks using techniques discussed earlier by writing a function preprocess and applying it to the transcript feature of the dataframe.
+
+The stopwords list is available as stopwords.
+
+Instructions
+100 XP
+Generate the Doc object for text. Ignore the disable argument for now.
+Generate lemmas using list comprehension using the lemma_ attribute.
+Remove non-alphabetic characters using isalpha() in the if condition.
+
+# Function to preprocess text
+def preprocess(text):
+  	# Create Doc object
+    doc = nlp(text, disable=['ner', 'parser'])
+    # Generate lemmas
+    lemmas = [token.lemma_ for token in doc]
+    # Remove stopwords and non-alphabetic characters
+    a_lemmas = [lemma for lemma in lemmas 
+            if lemma.isalpha() and lemma not in stopwords]
+    
+    return ' '.join(a_lemmas)
+  
+# Apply preprocess to ted['transcript']
+ted['transcript'] = ted['transcript'].apply(preprocess)
+print(ted['transcript'])
+
+
+
+POS tagging in Lord of the Flies
+In this exercise, you will perform part-of-speech tagging on a famous passage from one of the most well-known novels of all time, Lord of the Flies, authored by William Golding.
+
+The passage is available as lotf and has already been printed to the console.
+
+Instructions
+100 XP
+Load the en_core_web_sm model.
+Create a doc object for lotf using nlp().
+Using the text and pos_ attributes, generate tokens and their corresponding POS tags.
+
+# Load the en_core_web_sm model
+nlp = spacy.load('en_core_web_sm')
+
+# Create a Doc object
+doc = nlp(lotf)
+
+# Generate tokens and pos tags
+pos = [(token.text, token.pos_) for token in doc]
+print(pos)
+
+
+Counting nouns in a piece of text
+In this exercise, we will write two functions, nouns() and proper_nouns() that will count the number of other nouns and proper nouns in a piece of text respectively.
+
+These functions will take in a piece of text and generate a list containing the POS tags for each word. It will then return the number of proper nouns/other nouns that the text contains. We will use these functions in the next exercise to generate interesting insights about fake news.
+
+The en_core_web_sm model has already been loaded as nlp in this exercise.
+
+Instructions 1/2
+50 XP
+1
+Using the list count method, count the number of proper nouns (annotated as PROPN) in the pos list.
+
+nlp = spacy.load('en_core_web_sm')
+
+# Returns number of proper nouns
+def proper_nouns(text, model=nlp):
+  	# Create doc object
+    doc = model(text)
+    # Generate list of POS tags
+    pos = [token.pos_ for token in doc]
+    
+    # Return number of proper nouns
+    return pos.count('PROPN')
+
+print(proper_nouns("Abdul, Bill and Cathy went to the market to buy apples.", nlp))
+
+nlp = spacy.load('en_core_web_sm')
+
+# Returns number of other nouns
+def nouns(text, model=nlp):
+  	# Create doc object
+    doc = model(text)
+    # Generate list of POS tags
+    pos = [token.pos_ for token in doc]
+    
+    # Return number of other nouns
+    return pos.count('NOUN')
+
+print(nouns("Abdul, Bill and Cathy went to the market to buy apples.", nlp))
+
+
+Noun usage in fake news
+In this exercise, you have been given a dataframe headlines that contains news headlines that are either fake or real. Your task is to generate two new features num_propn and num_noun that represent the number of proper nouns and other nouns contained in the title feature of headlines.
+
+Next, we will compute the mean number of proper nouns and other nouns used in fake and real news headlines and compare the values. If there is a remarkable difference, then there is a good chance that using the num_propn and num_noun features in fake news detectors will improve its performance.
+
+To accomplish this task, the functions proper_nouns and nouns that you had built in the previous exercise have already been made available to you.
+
+Instructions 1/2
+50 XP
+1
+Create a new feature num_propn by applying proper_nouns to headlines['title'].
+Filter headlines to compute the mean number of proper nouns in fake news using the mean method.
+
+headlines['num_propn'] = headlines['title'].apply(proper_nouns)
+
+# Compute mean of proper nouns
+real_propn = headlines[headlines['label'] == 'REAL']['num_propn'].mean()
+fake_propn = headlines[headlines['label'] == 'FAKE']['num_propn'].mean()
+
+# Print results
+print("Mean no. of proper nouns in real and fake headlines are %.2f and %.2f respectively"%(real_propn, fake_propn))
+
+
+Repeat the process for other nous: create a feature 'num_noun' using nouns and compute the mean of other nouns
+
+
+headlines['num_noun'] = headlines['title'].apply(nouns)
+
+# Compute mean of other nouns
+real_noun = headlines[headlines['label'] == 'REAL']['num_noun'].mean()
+fake_noun = headlines[headlines['label'] == 'FAKE']['num_noun'].mean()
+
+# Print results
+print("Mean no. of other nouns in real and fake headlines are %.2f and %.2f respectively"%(real_noun, fake_noun))
+
+
+Named entities in a sentence
+In this exercise, we will identify and classify the labels of various named entities in a body of text using one of spaCy's statistical models. We will also verify the veracity of these labels.
+
+Instructions
+100 XP
+Use spacy.load() to load the en_core_web_sm model.
+Create a Doc instance doc using text and nlp.
+Loop over doc.ents to print all the named entities and their corresponding labels.
+
+# Load the required model
+nlp = spacy.load('en_core_web_sm')
+
+# Create a Doc instance 
+text = 'Sundar Pichai is the CEO of Google. Its headquarters is in Mountain View.'
+doc = nlp(text)
+
+# Print all named entities and their labels
+for ent in doc.ents:
+    print(ent.text, ent.label_)
+    
+    
+    Identifying people mentioned in a news article
+In this exercise, you have been given an excerpt from a news article published in TechCrunch. Your task is to write a function find_people that identifies the names of people that have been mentioned in a particular piece of text. You will then use find_people to identify the people of interest in the article.
+
+The article is available as the string tc and has been printed to the console. The required spacy model has also been already loaded as nlp.
+
+Instructions
+100 XP
+Create a Doc object for text.
+Using list comprehension, loop through doc.ents and create a list of named entities whose label is PERSON.
+Using find_persons(), print the people mentioned in tc.
+
+def find_persons(text):
+  # Create Doc object
+  doc = nlp(text)
+  
+  # Identify the persons
+  persons = [ent.text for ent in doc.ents if ent.label_ == 'PERSON']
+  
+  # Return persons
+  return persons
+
+print(find_persons(tc))
+
+
+Word vectors with a given vocabulary
+You have been given a corpus of documents and you have computed the vocabulary of the corpus to be the following: V: a, an, and, but, can, come, evening, forever, go, i, men, may, on, the, women
+
+Which of the following corresponds to the bag of words vector for the document "men may come and men may go but i go on forever"?
+
+(0, 0, 1, 1, 0, 1, 0, 1, 2, 1, 2, 2, 1, 0, 0)
+
+
+
+BoW model for movie taglines
+In this exercise, you have been provided with a corpus of more than 7000 movie tag lines. Your job is to generate the bag of words representation bow_matrix for these taglines. For this exercise, we will ignore the text preprocessing step and generate bow_matrix directly.
+
+We will also investigate the shape of the resultant bow_matrix. The first five taglines in corpus have been printed to the console for you to examine.
+
+Instructions
+100 XP
+Import the CountVectorizer class from sklearn.
+Instantiate a CountVectorizer object. Name it vectorizer.
+Using fit_transform(), generate bow_matrix for corpus.
+
+# Import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create CountVectorizer object
+vectorizer = CountVectorizer()
+
+# Generate matrix of word vectors
+bow_matrix = vectorizer.fit_transform(corpus)
+
+# Print the shape of bow_matrix
+print(bow_matrix.shape)
+
+
+Analyzing dimensionality and preprocessing
+In this exercise, you have been provided with a lem_corpus which contains the pre-processed versions of the movie taglines from the previous exercise. In other words, the taglines have been lowercased and lemmatized, and stopwords have been removed.
+
+Your job is to generate the bag of words representation bow_lem_matrix for these lemmatized taglines and compare its shape with that of bow_matrix obtained in the previous exercise. The first five lemmatized taglines in lem_corpus have been printed to the console for you to examine.
+
+Instructions
+100 XP
+Import the CountVectorizer class from sklearn.
+Instantiate a CountVectorizer object. Name it vectorizer.
+Using fit_transform(), generate bow_lem_matrix for lem_corpus.
+
+# Import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create CountVectorizer object
+vectorizer = CountVectorizer()
+
+# Generate matrix of word vectors
+bow_lem_matrix = vectorizer.fit_transform(lem_corpus)
+
+# Print the shape of bow_lem_matrix
+print(bow_lem_matrix.shape)
+
+
+Mapping feature indices with feature names
+In the lesson video, we had seen that CountVectorizer doesn't necessarily index the vocabulary in alphabetical order. In this exercise, we will learn to map each feature index to its corresponding feature name from the vocabulary.
+
+We will use the same three sentences on lions from the video. The sentences are available in a list named corpus and has already been printed to the console.
+
+Instructions
+100 XP
+Instantiate a CountVectorizer object. Name it vectorizer.
+Using fit_transform(), generate bow_matrix for corpus.
+Using the get_feature_names() method, map the column names to the corresponding word in the vocabulary.
+
+# Create CountVectorizer object
+vectorizer = CountVectorizer()
+
+# Generate matrix of word vectors
+bow_matrix = vectorizer.fit_transform(corpus)
+
+# Convert bow_matrix into a DataFrame
+bow_df = pd.DataFrame(bow_matrix.toarray())
+
+# Map the column names to vocabulary 
+bow_df.columns = vectorizer.get_feature_names()
+
+# Print bow_df
+print(bow_df)
+
+BoW vectors for movie reviews
+In this exercise, you have been given two pandas Series, X_train and X_test, which consist of movie reviews. They represent the training and the test review data respectively. Your task is to preprocess the reviews and generate BoW vectors for these two sets using CountVectorizer.
+
+Once we have generated the BoW vector matrices X_train_bow and X_test_bow, we will be in a very good position to apply a machine learning model to it and conduct sentiment analysis.
+
+Instructions
+100 XP
+Import CountVectorizer from the sklearn library.
+Instantiate a CountVectorizer object named vectorizer. Ensure that all words are converted to lowercase and english stopwords are removed.
+Using X_train, fit vectorizer and then use it to transform X_train to generate the set of BoW vectors X_train_bow.
+Transform X_test using vectorizer to generate the set of BoW vectors X_test_bow.
+
+# Import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create a CountVectorizer object
+vectorizer = CountVectorizer(lowercase=False, stop_words='english')
+
+# Fit and transform X_train
+X_train_bow = vectorizer.fit_transform(X_train)
+
+# Transform X_test
+X_test_bow = vectorizer.transform(X_test)
+
+# Print shape of X_train_bow and X_test_bow
+print(X_train_bow.shape)
+print(X_test_bow.shape)
+
+
+Predicting the sentiment of a movie review
+In the previous exercise, you generated the bag-of-words representations for the training and test movie review data. In this exercise, we will use this model to train a Naive Bayes classifier that can detect the sentiment of a movie review and compute its accuracy. Note that since this is a binary classification problem, the model is only capable of classifying a review as either positive (1) or negative (0). It is incapable of detecting neutral reviews.
+
+In case you don't recall, the training and test BoW vectors are available as X_train_bow and X_test_bow respectively. The corresponding labels are available as y_train and y_test respectively. Also, for you reference, the original movie review dataset is available as df.
+
+Instructions
+100 XP
+Instantiate an object of MultinomialNB. Name it clf.
+Fit clf using X_train_bow and y_train.
+Measure the accuracy of clf using X_test_bow and y_test.
+
+# Create a MultinomialNB object
+clf = MultinomialNB()
+
+# Fit the classifier
+clf.fit(X_train_bow, y_train)
+
+# Measure the accuracy
+accuracy = clf.score(X_test_bow, y_test)
+print("The accuracy of the classifier on the test set is %.3f" % accuracy)
+
+# Predict the sentiment of a negative review
+review = "The movie was terrible. The music was underwhelming and the acting mediocre."
+prediction = clf.predict(vectorizer.transform([review]))[0]
+print("The sentiment predicted by the classifier is %i" % (prediction))
+
+
+n-gram models for movie tag lines
+In this exercise, we have been provided with a corpus of more than 9000 movie tag lines. Our job is to generate n-gram models up to n equal to 1, n equal to 2 and n equal to 3 for this data and discover the number of features for each model.
+
+We will then compare the number of features generated for each model.
+
+Instructions
+100 XP
+Generate an n-gram model with n-grams up to n=1. Name it ng1
+Generate an n-gram model with n-grams up to n=2. Name it ng2
+Generate an n-Gram Model with n-grams up to n=3. Name it ng3
+Print the number of features for each model.
+
+# Generate n-grams upto n=1
+vectorizer_ng1 = CountVectorizer(ngram_range=(1,1))
+ng1 = vectorizer_ng1.fit_transform(corpus)
+
+# Generate n-grams upto n=2
+vectorizer_ng2 = CountVectorizer(ngram_range=(1,2))
+ng2 = vectorizer_ng2.fit_transform(corpus)
+
+# Generate n-grams upto n=3
+vectorizer_ng3 = CountVectorizer(ngram_range=(1,3))
+ng3 = vectorizer_ng3.fit_transform(corpus)
+
+# Print the number of features for each model
+print("ng1, ng2 and ng3 have %i, %i and %i features respectively" % (ng1.shape[1], ng2.shape[1], ng3.shape[1]))
+
+Higher order n-grams for sentiment analysis
+Similar to a previous exercise, we are going to build a classifier that can detect if the review of a particular movie is positive or negative. However, this time, we will use n-grams up to n=2 for the task.
+
+The n-gram training reviews are available as X_train_ng. The corresponding test reviews are available as X_test_ng. Finally, use y_train and y_test to access the training and test sentiment classes respectively.
+
+Instructions
+100 XP
+Define an instance of MultinomialNB. Name it clf_ng
+Fit the classifier on X_train_ng and y_train.
+Measure accuracy on X_test_ng and y_test the using score() method.
+
+
+# Define an instance of MultinomialNB 
+clf_ng = MultinomialNB()
+
+# Fit the classifier 
+clf_ng.fit(X_train_ng, y_train)
+
+# Measure the accuracy 
+accuracy = clf_ng.score(X_test_ng,y_test)
+print("The accuracy of the classifier on the test set is %.3f" % accuracy)
+
+# Predict the sentiment of a negative review
+review = "The movie was not good. The plot had several holes and the acting lacked panache."
+prediction = clf_ng.predict(ng_vectorizer.transform([review]))[0]
+print("The sentiment predicted by the classifier is %i" % (prediction))
+
+
+Comparing performance of n-gram models
+You now know how to conduct sentiment analysis by converting text into various n-gram representations and feeding them to a classifier. In this exercise, we will conduct sentiment analysis for the same movie reviews from before using two n-gram models: unigrams and n-grams upto n equal to 3.
+
+We will then compare the performance using three criteria: accuracy of the model on the test set, time taken to execute the program and the number of features created when generating the n-gram representation.
+
+Instructions 1/2
+50 XP
+1
+Initialize a CountVectorizer object such that it generates unigrams.
+
+start_time = time.time()
+# Splitting the data into training and test sets
+train_X, test_X, train_y, test_y = train_test_split(df['review'], df['sentiment'], test_size=0.5, random_state=42, stratify=df['sentiment'])
+
+# Generating ngrams
+vectorizer = CountVectorizer()
+train_X = vectorizer.fit_transform(train_X)
+test_X = vectorizer.transform(test_X)
+
+# Fit classifier
+clf = MultinomialNB()
+clf.fit(train_X, train_y)
+
+# Print accuracy, time and number of dimensions
+print("The program took %.3f seconds to complete. The accuracy on the test set is %.2f. The ngram representation had %i features." % (time.time() - start_time, clf.score(test_X, test_y), train_X.shape[1]))
+
+
+tf-idf weight of commonly occurring words
+The word bottle occurs 5 times in a particular document D and also occurs in every document of the corpus. What is the tf-idf weight of bottle in D?
+0
+
+
+
+tf-idf vectors for TED talks
+In this exercise, you have been given a corpus ted which contains the transcripts of 500 TED Talks. Your task is to generate the tf-idf vectors for these talks.
+
+In a later lesson, we will use these vectors to generate recommendations of similar talks based on the transcript.
+
+Instructions
+100 XP
+Import TfidfVectorizer from sklearn.
+Create a TfidfVectorizer object. Name it vectorizer.
+Generate tfidf_matrix for ted using the fit_transform()
+
+
+# Import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Create TfidfVectorizer object
+vectorizer = TfidfVectorizer()
+
+# Generate matrix of word vectors
+tfidf_matrix = vectorizer.fit_transform(ted)
+
+# Print the shape of tfidf_matrix
+print(tfidf_matrix.shape)
+
+Range of cosine scores
+Which of the following is a possible cosine score for a pair of document vectors?
+
+0.86
+
+Computing dot product
+In this exercise, we will learn to compute the dot product between two vectors, A = (1, 3) and B = (-2, 2), using the numpy library. More specifically, we will use the np.dot() function to compute the dot product of two numpy arrays.
+
+Instructions
+100 XP
+Initialize A (1,3) and B (-2,2) as numpy arrays using np.array().
+Compute the dot product using np.dot() and passing A and B as arguments.
+
+# Initialize numpy vectors
+A = np.array([1,3])
+B = np.array([-2,2])
+
+# Compute dot product
+dot_prod = np.dot(A, B)
+
+# Print dot product
+print(dot_prod)
+
+
+
+Cosine similarity matrix of a corpus
+In this exercise, you have been given a corpus, which is a list containing five sentences. The corpus is printed in the console. You have to compute the cosine similarity matrix which contains the pairwise cosine similarity score for every pair of sentences (vectorized using tf-idf).
+
+Remember, the value corresponding to the ith row and jth column of a similarity matrix denotes the similarity score for the ith and jth vector.
+
+Instructions
+100 XP
+Initialize an instance of TfidfVectorizer. Name it tfidf_vectorizer.
+Using fit_transform(), generate the tf-idf vectors for corpus. Name it tfidf_matrix.
+Use cosine_similarity() and pass tfidf_matrix to compute the cosine similarity matrix cosine_sim.
+
+# Initialize an instance of tf-idf Vectorizer
+tfidf_vectorizer = TfidfVectorizer()
+
+# Generate the tf-idf vectors for the corpus
+tfidf_matrix = tfidf_vectorizer.fit_transform(corpus)
+
+# Compute and print the cosine similarity matrix
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+print(cosine_sim)
+
+Comparing linear_kernel and cosine_similarity
+In this exercise, you have been given tfidf_matrix which contains the tf-idf vectors of a thousand documents. Your task is to generate the cosine similarity matrix for these vectors first using cosine_similarity and then, using linear_kernel.
+
+We will then compare the computation times for both functions.
+
+Instructions 1/2
+50 XP
+1
+Compute the cosine similarity matrix for tfidf_matrix using cosine_similarity.
+
+# Record start time
+start = time.time()
+
+# Compute cosine similarity matrix
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+# Print cosine similarity matrix
+print(cosine_sim)
+
+# Print time taken
+print("Time taken: %s seconds" %(time.time() - start))
+
+# Record start time
+start = time.time()
+
+# Compute cosine similarity matrix
+cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+
+# Print cosine similarity matrix
+print(cosine_sim)
+
+# Print time taken
+print("Time taken: %s seconds" %(time.time() - start))
+
+Plot recommendation engine
+In this exercise, we will build a recommendation engine that suggests movies based on similarity of plot lines. You have been given a get_recommendations() function that takes in the title of a movie, a similarity matrix and an indices series as its arguments and outputs a list of most similar movies. indices has already been provided to you.
+
+You have also been given a movie_plots Series that contains the plot lines of several movies. Your task is to generate a cosine similarity matrix for the tf-idf vectors of these plots.
+
+Consequently, we will check the potency of our engine by generating recommendations for one of my favorite movies, The Dark Knight Rises.
+
+Instructions
+100 XP
+Instructions
+100 XP
+Initialize a TfidfVectorizer with English stop_words. Name it tfidf.
+Construct tfidf_matrix by fitting and transforming the movie plot data using fit_transform().
+Generate the cosine similarity matrix cosine_sim using tfidf_matrix. Don't use cosine_similarity()!
+Use get_recommendations() to generate recommendations for 'The Dark Knight Rises'.
+
+# Initialize the TfidfVectorizer 
+tfidf = TfidfVectorizer(stop_words='english')
+
+# Construct the TF-IDF matrix
+tfidf_matrix = tfidf.fit_transform(movie_plots)
+
+# Generate the cosine similarity matrix
+cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+ 
+# Generate recommendations 
+print(get_recommendations('The Dark Knight Rises', cosine_sim, indices))
+
+
+The recommender function
+In this exercise, we will build a recommender function get_recommendations(), as discussed in the lesson and the previous exercise. As we know, it takes in a title, a cosine similarity matrix, and a movie title and index mapping as arguments and outputs a list of 10 titles most similar to the original title (excluding the title itself).
+
+You have been given a dataset metadata that consists of the movie titles and overviews. The head of this dataset has been printed to console.
+
+Instructions
+100 XP
+Get index of the movie that matches the title by using the title key of indices.
+Extract the ten most similar movies from sim_scores and store it back in sim_scores.
+
+# Generate mapping between titles and index
+indices = pd.Series(metadata.index, index=metadata['title']).drop_duplicates()
+
+def get_recommendations(title, cosine_sim, indices):
+    # Get index of movie that matches title
+    idx = indices[title]
+    # Sort the movies based on the similarity scores
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    # Get the scores for 10 most similar movies
+    sim_scores = sim_scores[1:11]
+    # Get the movie indices
+    movie_indices = [i[0] for i in sim_scores]
+    # Return the top 10 most similar movies
+    return metadata['title'].iloc[movie_indices]
+    
+    
+    
+    TED talk recommender
+In this exercise, we will build a recommendation system that suggests TED Talks based on their transcripts. You have been given a get_recommendations() function that takes in the title of a talk, a similarity matrix and an indices series as its arguments, and outputs a list of most similar talks. indices has already been provided to you.
+
+You have also been given a transcripts series that contains the transcripts of around 500 TED talks. Your task is to generate a cosine similarity matrix for the tf-idf vectors of the talk transcripts.
+
+Consequently, we will generate recommendations for a talk titled '5 ways to kill your dreams' by Brazilian entrepreneur Bel Pesce.
+
+Instructions
+100 XP
+Initialize a TfidfVectorizer with English stopwords. Name it tfidf.
+Construct tfidf_matrix by fitting and transforming transcripts.
+Generate the cosine similarity matrix cosine_sim using tfidf_matrix.
+Use get_recommendations() to generate recommendations for '5 ways to kill your dreams'.
+
+# Initialize the TfidfVectorizer 
+tfidf = TfidfVectorizer(stop_words = 'english')
+
+# Construct the TF-IDF matrix
+tfidf_matrix = tfidf.fit_transform(transcripts)
+
+# Generate the cosine similarity matrix
+cosine_sim = linear_kernel(tfidf_matrix,tfidf_matrix)
+ 
+# Generate recommendations 
+print(get_recommendations('5 ways to kill your dreams', cosine_sim, indices))
+
+
+Generating word vectors
+In this exercise, we will generate the pairwise similarity scores of all the words in a sentence. The sentence is available as sent and has been printed to the console for your convenience.
+
+Instructions
+100 XP
+Create a Doc object doc for sent.
+In the nested loop, compute the similarity between token1 and token2.
+
+# Create the doc object
+doc = nlp(sent)
+
+# Compute pairwise similarity scores
+for token1 in doc:
+  for token2 in doc:
+    print(token1.text, token2.text, token1.similarity(token2))
+    
+    
+Computing similarity of Pink Floyd songs
+In this final exercise, you have been given lyrics of three songs by the British band Pink Floyd, namely 'High Hopes', 'Hey You' and 'Mother'. The lyrics to these songs are available as hopes, hey and mother respectively.
+
+Your task is to compute the pairwise similarity between mother and hopes, and mother and hey.
+
+Instructions
+100 XP
+Create Doc objects for mother, hopes and hey.
+Compute the similarity between mother and hopes.
+Compute the similarity between mother and hey.
+
+
+# Create Doc objects
+mother_doc = nlp(mother)
+hopes_doc = nlp(hopes)
+hey_doc = nlp(hey)
+
+# Print similarity between mother and hopes
+print(mother_doc.similarity(hopes_doc))
+
+# Print similarity between mother and hey
+print(mother_doc.similarity(hey_doc))
